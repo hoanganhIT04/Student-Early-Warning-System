@@ -118,11 +118,11 @@ const resetFilters = () => {
         <div class="flex flex-col space-y-1.5">
           <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ t('history.filters.searchLabel') }}</label>
           <div class="relative w-full">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-[10px] text-gray-400"></i>
+            <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none"></i>
             <InputText 
               v-model="filters.search" 
               :placeholder="t('history.filters.searchPlaceholder')" 
-              class="w-full text-xs font-semibold py-2 pl-9 pr-3 rounded-lg border border-gray-250 dark:border-gray-700 bg-transparent dark:text-white"
+              class="w-full text-xs font-semibold py-2 pl-3 pr-9 rounded-lg border border-gray-250 dark:border-gray-700 bg-transparent dark:text-white"
             />
           </div>
         </div>
