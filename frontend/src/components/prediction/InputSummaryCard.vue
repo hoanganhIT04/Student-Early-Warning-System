@@ -195,35 +195,35 @@ const toggleSection = (section: keyof typeof openSections.value) => {
         <i :class="['fa-solid', openSections.academic ? 'fa-chevron-up' : 'fa-chevron-down', 'text-[10px] text-gray-400']"></i>
       </button>
       
-      <div v-show="openSections.academic" class="p-5 bg-white dark:bg-gray-900 space-y-5 text-xs font-semibold text-gray-650 dark:text-gray-400">
+      <div v-show="openSections.academic" class="p-5 bg-white dark:bg-gray-900 space-y-5 text-xs font-semibold text-gray-655 dark:text-gray-400">
         <!-- Semester 1 Grid -->
         <div>
           <h6 class="text-xs font-bold text-gray-850 dark:text-gray-300 border-b border-gray-100 dark:border-gray-800 pb-1 mb-3 uppercase tracking-wider">
-            Semester 1 Curricular Units
+            {{ t('singlePrediction.sections.sem1Performance') }}
           </h6>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">Credited</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.credited') }}</span>
               <span class="text-gray-900 dark:text-white">{{ studentData.sem1Credited }}</span>
             </div>
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">Enrolled</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.enrolled') }}</span>
               <span class="text-gray-900 dark:text-white">{{ studentData.sem1Enrolled }}</span>
             </div>
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">Evaluations</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.evaluations') }}</span>
               <span class="text-gray-900 dark:text-white">{{ studentData.sem1Evaluations }}</span>
             </div>
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">Approved</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.approved') }}</span>
               <span class="text-gray-950 dark:text-white font-extrabold text-primary-600 dark:text-primary-400">{{ studentData.sem1Approved }}</span>
             </div>
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">Avg Grade</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.avgGrade') }}</span>
               <span class="text-gray-900 dark:text-white font-extrabold">{{ formatNumber(studentData.sem1Grade) }}</span>
             </div>
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">No Eval</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.noEval') }}</span>
               <span class="text-gray-900 dark:text-white">{{ studentData.sem1WithoutEvaluations }}</span>
             </div>
           </div>
@@ -232,31 +232,31 @@ const toggleSection = (section: keyof typeof openSections.value) => {
         <!-- Semester 2 Grid -->
         <div>
           <h6 class="text-xs font-bold text-gray-850 dark:text-gray-300 border-b border-gray-100 dark:border-gray-800 pb-1 mb-3 uppercase tracking-wider">
-            Semester 2 Curricular Units
+            {{ t('singlePrediction.sections.sem2Performance') }}
           </h6>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">Credited</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.credited') }}</span>
               <span class="text-gray-900 dark:text-white">{{ studentData.sem2Credited }}</span>
             </div>
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">Enrolled</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.enrolled') }}</span>
               <span class="text-gray-900 dark:text-white">{{ studentData.sem2Enrolled }}</span>
             </div>
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">Evaluations</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.evaluations') }}</span>
               <span class="text-gray-900 dark:text-white">{{ studentData.sem2Evaluations }}</span>
             </div>
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">Approved</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.approved') }}</span>
               <span class="text-gray-955 dark:text-white font-extrabold text-primary-600 dark:text-primary-400">{{ studentData.sem2Approved }}</span>
             </div>
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">Avg Grade</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.avgGrade') }}</span>
               <span class="text-gray-900 dark:text-white font-extrabold">{{ formatNumber(studentData.sem2Grade) }}</span>
             </div>
             <div>
-              <span class="block text-[10px] text-gray-400 mb-0.5">No Eval</span>
+              <span class="block text-[10px] text-gray-400 mb-0.5">{{ t('singlePrediction.summaryLabels.noEval') }}</span>
               <span class="text-gray-900 dark:text-white">{{ studentData.sem2WithoutEvaluations }}</span>
             </div>
           </div>
@@ -265,7 +265,7 @@ const toggleSection = (section: keyof typeof openSections.value) => {
         <!-- Economic Indicators -->
         <div>
           <h6 class="text-xs font-bold text-gray-850 dark:text-gray-300 border-b border-gray-100 dark:border-gray-800 pb-1 mb-3 uppercase tracking-wider">
-            Macroeconomic Indexes
+            {{ t('singlePrediction.sections.economic') }}
           </h6>
           <div class="grid grid-cols-3 gap-4">
             <div>

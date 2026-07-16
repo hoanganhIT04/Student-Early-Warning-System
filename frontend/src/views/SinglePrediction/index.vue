@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import { usePredictionStore } from '../../stores/prediction.store';
 import { useSettingsStore } from '../../stores/settings.store';
+import { useI18n } from 'vue-i18n';
 import PageHeader from '../../components/common/PageHeader.vue';
 import PredictionForm from '../../components/prediction/PredictionForm.vue';
 import PredictionDialog from '../../components/prediction/PredictionDialog.vue';
@@ -10,6 +11,7 @@ import type { StudentPredictionInput } from '../../types/student';
 
 const predictionStore = usePredictionStore();
 const settingsStore = useSettingsStore();
+const { t, tm } = useI18n();
 
 const showResultDialog = ref(false);
 const activeInput = ref<StudentPredictionInput | null>(null);
@@ -20,24 +22,9 @@ const analysisStep = ref(0);
 const loading = computed(() => predictionStore.loading);
 const predictionResult = computed(() => predictionStore.currentSingleResult);
 
-const analysisSteps = computed(() => {
-  return settingsStore.language === 'vi' 
-    ? [
-        'Đang phân tích thông tin sinh viên...',
-        'Đang đánh giá kết quả học tập...',
-        'Đang kiểm tra chỉ số tài chính...',
-        'Đang chạy mô hình dự đoán...',
-        'Đang tính toán mức độ tin cậy...',
-        'Hoàn tất dự đoán.'
-      ]
-    : [
-        'Analyzing student profile...',
-        'Evaluating academic performance...',
-        'Checking financial indicators...',
-        'Running prediction model...',
-        'Calculating confidence...',
-        'Prediction Complete.'
-      ];
+const analysisSteps = computed<string[]>(() => {
+  const steps = tm('singlePrediction.analysisSteps') as any;
+  return Array.isArray(steps) ? steps : [];
 });
 
 const handlePredict = async (studentData: StudentPredictionInput) => {

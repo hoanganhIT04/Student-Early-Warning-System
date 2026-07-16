@@ -19,12 +19,12 @@ const motionEffects = computed({
 });
 
 const themeOptions = [
-  { value: 'blue', labelVi: 'Xanh Dương', labelEn: 'Blue', bgClass: 'bg-blue-500' },
-  { value: 'green', labelVi: 'Xanh Lá', labelEn: 'Green', bgClass: 'bg-green-500' },
-  { value: 'purple', labelVi: 'Tím', labelEn: 'Purple', bgClass: 'bg-purple-500' },
-  { value: 'orange', labelVi: 'Cam', labelEn: 'Orange', bgClass: 'bg-orange-500' },
-  { value: 'red', labelVi: 'Đỏ', labelEn: 'Red', bgClass: 'bg-red-500' },
-  { value: 'teal', labelVi: 'Teal', labelEn: 'Teal', bgClass: 'bg-teal-500' }
+  { value: 'blue', bgClass: 'bg-blue-500' },
+  { value: 'green', bgClass: 'bg-green-500' },
+  { value: 'purple', bgClass: 'bg-purple-500' },
+  { value: 'orange', bgClass: 'bg-orange-500' },
+  { value: 'red', bgClass: 'bg-red-500' },
+  { value: 'teal', bgClass: 'bg-teal-500' }
 ];
 
 const handleThemeChange = (color: any) => {
@@ -41,10 +41,10 @@ const handleAppearanceChange = (mode: 'light' | 'dark') => {
     <template #title>
       <div class="px-5 pt-4 flex flex-col space-y-1">
         <h4 class="text-sm font-bold text-gray-800 dark:text-gray-200 leading-tight select-none">
-          {{ settingsStore.language === 'vi' ? 'Giao Diện' : 'Appearance Settings' }}
+          {{ t('settings.appearance.title') }}
         </h4>
         <p class="text-[10px] text-gray-400 font-semibold leading-normal select-none">
-          {{ settingsStore.language === 'vi' ? 'Tùy chỉnh giao diện hiển thị của hệ thống' : 'Personalize the display mode and primary colors.' }}
+          {{ t('settings.appearance.desc') }}
         </p>
       </div>
     </template>
@@ -55,10 +55,10 @@ const handleAppearanceChange = (mode: 'light' | 'dark') => {
         <div class="space-y-3.5">
           <div class="flex flex-col space-y-1">
             <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider select-none">
-              {{ settingsStore.language === 'vi' ? 'Chế độ màu' : 'Color Mode' }}
+              {{ t('settings.appearance.colorMode') }}
             </span>
             <p class="text-[10px] text-gray-400 font-semibold select-none leading-none">
-              {{ settingsStore.language === 'vi' ? 'Chọn chế độ hiển thị phù hợp với mắt của bạn' : 'Select layout display brightness preference.' }}
+              {{ t('settings.appearance.colorModeDesc') }}
             </p>
           </div>
 
@@ -87,10 +87,10 @@ const handleAppearanceChange = (mode: 'light' | 'dark') => {
 
               <!-- Title & Desc -->
               <span class="text-xs font-black text-gray-850 dark:text-white leading-tight">
-                {{ settingsStore.language === 'vi' ? 'Sáng (Light Mode)' : 'Light Mode' }}
+                {{ t('settings.appearance.lightModeLabel') }}
               </span>
               <span class="text-[9px] text-gray-400 font-semibold leading-normal mt-1 max-w-[80%] mx-auto">
-                {{ settingsStore.language === 'vi' ? 'Giao diện sáng, phù hợp cho môi trường có ánh sáng mạnh' : 'Light interface, ideal for well-lit surroundings' }}
+                {{ t('settings.appearance.lightModeDesc') }}
               </span>
             </button>
 
@@ -118,10 +118,10 @@ const handleAppearanceChange = (mode: 'light' | 'dark') => {
 
               <!-- Title & Desc -->
               <span class="text-xs font-black text-gray-850 dark:text-white leading-tight">
-                {{ settingsStore.language === 'vi' ? 'Tối (Dark Mode)' : 'Dark Mode' }}
+                {{ t('settings.appearance.darkModeLabel') }}
               </span>
               <span class="text-[9px] text-gray-400 font-semibold leading-normal mt-1 max-w-[80%] mx-auto">
-                {{ settingsStore.language === 'vi' ? 'Giao diện tối, phù hợp cho môi trường ánh sáng yếu' : 'Dark interface, comfortable for low-light settings' }}
+                {{ t('settings.appearance.darkModeDesc') }}
               </span>
             </button>
           </div>
@@ -133,10 +133,10 @@ const handleAppearanceChange = (mode: 'light' | 'dark') => {
         <div class="space-y-3.5">
           <div class="flex flex-col space-y-1">
             <span class="block text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider select-none">
-              {{ settingsStore.language === 'vi' ? 'Màu chủ đạo' : 'Theme Accent' }}
+              {{ t('settings.appearance.themeColor') }}
             </span>
             <p class="text-[10px] text-gray-400 font-semibold select-none leading-none">
-              {{ settingsStore.language === 'vi' ? 'Chọn màu sắc chủ đạo cho hệ thống' : 'Select branding primary color preset.' }}
+              {{ t('settings.appearance.themeColorDesc') }}
             </p>
           </div>
 
@@ -159,7 +159,7 @@ const handleAppearanceChange = (mode: 'light' | 'dark') => {
                   <i v-if="settingsStore.themeColor === theme.value" class="fa-solid fa-check text-[9px] font-black"></i>
                 </span>
               </div>
-              <span class="text-[10px] tracking-tight leading-none mt-1 select-none">{{ settingsStore.language === 'vi' ? theme.labelVi : theme.labelEn }}</span>
+              <span class="text-[10px] tracking-tight leading-none mt-1 select-none">{{ t('settings.themes.' + theme.value) }}</span>
             </button>
           </div>
         </div>
@@ -170,10 +170,10 @@ const handleAppearanceChange = (mode: 'light' | 'dark') => {
         <div class="space-y-3.5">
           <div class="flex flex-col space-y-1">
             <span class="block text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider select-none">
-              {{ settingsStore.language === 'vi' ? 'Giao diện' : 'Display Options' }}
+              {{ t('settings.appearance.displayOptions') }}
             </span>
             <p class="text-[10px] text-gray-400 font-semibold select-none leading-none">
-              {{ settingsStore.language === 'vi' ? 'Các tùy chọn hiển thị khác' : 'Configure secondary row heights and motion styles.' }}
+              {{ t('settings.appearance.displayOptionsDesc') }}
             </p>
           </div>
 
@@ -182,10 +182,10 @@ const handleAppearanceChange = (mode: 'light' | 'dark') => {
             <div class="flex items-center justify-between p-3.5 bg-gray-50/50 dark:bg-gray-800/40 rounded-xl border border-gray-150 dark:border-gray-800">
               <div class="flex flex-col space-y-0.5 max-w-[80%] select-none">
                 <span class="text-xs font-bold text-gray-850 dark:text-gray-200">
-                  {{ settingsStore.language === 'vi' ? 'Giao diện thu gọn' : 'Compact Layout' }}
+                  {{ t('settings.appearance.compactMode') }}
                 </span>
                 <span class="text-[9px] text-gray-400 font-semibold leading-normal">
-                  {{ settingsStore.language === 'vi' ? 'Thu gọn thanh bên để tăng không gian làm việc' : 'Collapse grid row padding to fit more statistics.' }}
+                  {{ t('settings.appearance.compactModeDesc') }}
                 </span>
               </div>
               <ToggleSwitch v-model="compactMode" />
@@ -195,10 +195,10 @@ const handleAppearanceChange = (mode: 'light' | 'dark') => {
             <div class="flex items-center justify-between p-3.5 bg-gray-50/50 dark:bg-gray-800/40 rounded-xl border border-gray-150 dark:border-gray-800">
               <div class="flex flex-col space-y-0.5 max-w-[80%] select-none">
                 <span class="text-xs font-bold text-gray-850 dark:text-gray-200">
-                  {{ settingsStore.language === 'vi' ? 'Hiệu ứng chuyển động' : 'Motion Transitions' }}
+                  {{ t('settings.appearance.motion') }}
                 </span>
                 <span class="text-[9px] text-gray-400 font-semibold leading-normal">
-                  {{ settingsStore.language === 'vi' ? 'Bật/tắt các hiệu ứng chuyển động mượt mà' : 'Enable smooth page transitions and panel sliders.' }}
+                  {{ t('settings.appearance.motionDesc') }}
                 </span>
               </div>
               <ToggleSwitch v-model="motionEffects" />

@@ -11,8 +11,10 @@ import { uploadService } from '../../api/upload.service';
 import { exportToExcel } from '../../utils/excel';
 import { getCourseLabel, getGenderLabel } from '../../utils/mapper';
 import { formatPercent } from '../../utils/formatter';
+import { useI18n } from 'vue-i18n';
 
 const predictionStore = usePredictionStore();
+const { t, tm } = useI18n();
 
 const fileUploadRef = ref<any>(null);
 const fileSelected = ref<File | null>(null);
@@ -53,16 +55,24 @@ const triggerPrediction = async () => {
 const handleExport = () => {
   if (resultsList.value.length === 0) return;
   
-  const reportData = resultsList.value.map((item) => ({
-    'Student Code': item.studentCode,
-    'Student Name': item.studentName,
-    'Class': item.className,
-    'Faculty': item.faculty,
-    'Prediction': item.prediction,
-    'Probability': formatPercent(item.probability),
-    'Risk Level': item.riskLevel,
-    'Recommendation': item.recommendations.join('; ')
-  }));
+  const reportData = resultsList.value.map((item) => {
+    // Dynamically retrieve translated recommendations
+    const translatedRecs = item.recommendations.map((_, idx) => {
+      const arr = tm('recommendations.' + item.prediction);
+      return Array.isArray(arr) && arr[idx] ? arr[idx] : item.recommendations[idx];
+    });
+
+    return {
+      [t('singlePrediction.fields.studentCode')]: item.studentCode,
+      [t('singlePrediction.fields.studentName')]: item.studentName,
+      [t('singlePrediction.fields.className')]: item.className,
+      [t('singlePrediction.fields.faculty')]: item.faculty,
+      [t('result.outcomeLabel')]: t('outcomes.' + item.prediction) || item.prediction,
+      [t('result.probabilityLabel')]: formatPercent(item.probability),
+      [t('result.riskLabel')]: t('risk.' + item.riskLevel) || item.riskLevel,
+      [t('result.advisoryCard')]: translatedRecs.join('; ')
+    };
+  });
 
   exportToExcel(reportData, `student_early_warning_report_${Date.now()}`);
 };
@@ -151,7 +161,7 @@ onBeforeUnmount(() => {
               <button 
                 @click="clearUpload"
                 class="w-8 h-8 rounded-lg bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 flex items-center justify-center border border-gray-200 dark:border-gray-750 text-gray-400 hover:text-red-500 cursor-pointer transition-all duration-200"
-                title="Remove file"
+                :title="t('general.removeFile')"
               >
                 <i class="fa-solid fa-trash-can"></i>
               </button>
@@ -211,7 +221,7 @@ onBeforeUnmount(() => {
             v-if="previewList.length > 10" 
             class="text-center py-3 border-t border-gray-50 dark:border-gray-800 text-[10px] font-bold text-gray-450 tracking-wide uppercase bg-gray-50/10 dark:bg-gray-900/5"
           >
-            And {{ previewList.length - 10 }} more student records...
+            {{ t('batchPrediction.moreRecords', { count: previewList.length - 10 }) }}
           </div>
         </template>
       </Card>

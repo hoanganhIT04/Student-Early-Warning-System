@@ -5,7 +5,15 @@
     "batchPrediction": "Batch Prediction",
     "history": "Prediction History",
     "about": "About the Project",
-    "settings": "Settings"
+    "settings": "Settings",
+    "mockModeActive": "Mock Mode Active",
+    "simulatingCleanly": "Warning models are simulating cleanly",
+    "groups": {
+      "overview": "OVERVIEW",
+      "predictions": "PREDICTIONS",
+      "information": "INFORMATION",
+      "system": "SYSTEM"
+    }
   },
   "header": {
     "earlyWarningSystem": "Student Early Warning System",
@@ -33,7 +41,21 @@
     "actions": "Actions",
     "success": "Success",
     "warning": "Warning",
-    "error": "Error"
+    "error": "Error",
+    "backToTop": "Back to top",
+    "singleEval": "Single Evaluation",
+    "batchRun": "Batch Run",
+    "viewAll": "View All",
+    "total": "Total",
+    "students": "students",
+    "student": "student",
+    "totalCountStudents": "{count} students total",
+    "processingRequest": "Processing Request",
+    "analyzingData": "Analyzing data. Please wait a moment...",
+    "step": "Step",
+    "demoMode": "Demo Mode",
+    "removeFile": "Remove file",
+    "resetForm": "Reset Form"
   },
   "dashboard": {
     "title": "Advisor Command Center",
@@ -62,7 +84,16 @@
     "inspectBatch": "Inspect Batch History",
     "noSingle": "No single student predictions logged yet.",
     "noBatch": "No batch runs loaded yet.",
-    "batchLog": "Batch Log"
+    "batchLog": "Batch Log",
+    "recentPredictionsTable": "Recent Student Predictions",
+    "importId": "Import ID",
+    "shortStudents": "Students",
+    "shortGraduates": "Graduates",
+    "shortDropouts": "Dropouts",
+    "activity": {
+      "singleMsg": "Single prediction run completed for student {name}. Outcome: {outcome} ({prob}% probability, Risk: {risk}).",
+      "batchMsg": "Batch prediction run completed for {count} students. Result breakdown: {summary}."
+    }
   },
   "singlePrediction": {
     "title": "Single Student Profiler",
@@ -85,7 +116,10 @@
       "family": "Family Background & Financial Status",
       "financial": "Financial & Assistance Indicators",
       "academic": "Academic Units & Macroeconomics",
-      "review": "Review Input Parameters"
+      "review": "Review Input Parameters",
+      "sem1Performance": "Semester 1 Academic Performance",
+      "sem2Performance": "Semester 2 Academic Performance",
+      "economic": "National Economic Indicators"
     },
     "fields": {
       "studentCode": "Student Code",
@@ -145,7 +179,31 @@
     "triggerPredict": "Trigger AI Prediction",
     "predictionComplete": "AI Prediction Complete",
     "closeDialog": "Close Report",
-    "identificationNote": "These identifying fields are kept locally for layout display and will NOT be forwarded to the machine learning model."
+    "identificationNote": "These identifying fields are kept locally for layout display and will NOT be forwarded to the machine learning model.",
+    "hints": {
+      "scholarship": "Active school scholarship",
+      "debtor": "Has tuition/fees arrears",
+      "tuitionFees": "Fees are fully up to date",
+      "displaced": "Living away from home",
+      "specialNeeds": "Requires educational aid"
+    },
+    "reviewDesc": "Review entered demographic, admission, family, financial, and academic indicators before running the AI simulation.",
+    "analysisSteps": [
+      "Analyzing student profile...",
+      "Evaluating academic performance...",
+      "Checking financial indicators...",
+      "Running prediction model...",
+      "Calculating confidence...",
+      "Prediction Complete."
+    ],
+    "summaryLabels": {
+      "credited": "Credited",
+      "enrolled": "Enrolled",
+      "evaluations": "Evaluations",
+      "approved": "Approved",
+      "avgGrade": "Avg. Grade (0-20)",
+      "noEval": "No Eval"
+    }
   },
   "batchPrediction": {
     "title": "Spreadsheet Batch Processor",
@@ -159,7 +217,8 @@
     "processing": "Executing batch calculations on AI engine...",
     "preview": "Spreadsheet Preview & Data Import ({count} rows found)",
     "results": "Batch Calculation Report ({count} predictions processed)",
-    "exportBtn": "Export Analytical Spreadsheet"
+    "exportBtn": "Export Analytical Spreadsheet",
+    "moreRecords": "And {count} more student records..."
   },
   "history": {
     "title": "Prediction Audits & Log",
@@ -205,16 +264,19 @@
       "title": "Dataset Profile: UCI Student Attrition",
       "p1": "The SEWS AI engine utilizes the 'Predict Students' Dropout and Academic Success' dataset, sourced from the UCI Machine Learning Repository (ID: 697). It consists of administrative records collected from a higher education institution in Portugal. It contains 4,424 records with 36 core academic and demographic features.",
       "records": "Dataset Records",
-      "features": "Core Features"
+      "features": "Core Features",
+      "macro": "Macroeconomic Indices"
     },
     "algorithms": {
-      "title": "Huấn luyện Algorithms (Ensemble Classifiers)",
+      "title": "Model Training Algorithms (Ensemble Classifiers)",
       "rf": "Random Forest",
       "rfDesc": "Constructs a multitude of decision trees at training time and outputs the mode/mean classification of the individual trees. Highly stable and prevents model overfitting.",
       "xgb": "XGBoost",
       "xgbDesc": "An optimized distributed gradient boosting library designed to be highly efficient, flexible, and portable. Excellent at learning complex boundaries in tabular data.",
       "lgbm": "LightGBM",
-      "lgbmDesc": "Developed by Microsoft, it uses tree-based learning algorithms. Fast training speeds, low memory usage, and handles large datasets with categorical features natively."
+      "lgbmDesc": "Developed by Microsoft, it uses tree-based learning algorithms. Fast training speeds, low memory usage, and handles large datasets with categorical features natively.",
+      "bagging": "Bagging Ensemble",
+      "gradient": "Gradient Boosting"
     },
     "stack": {
       "title": "Decoupled System Tech Stack",
@@ -224,7 +286,19 @@
       "gatewayDesc": "Laravel 11, Administrative Panel & PostgreSQL (Future).",
       "gatewayNote": "No backend API calls are implemented in this phase. The frontend uses a local DB to simulate all operations.",
       "classifier": "AI Classifier (Future Integration)",
-      "classifierDesc": "FastAPI, XGBoost/LightGBM Models, SHAP (Explainable AI)."
+      "classifierDesc": "FastAPI, XGBoost/LightGBM Models, SHAP (Explainable AI).",
+      "desc": {
+        "vue": "Progressive JavaScript framework for UI components",
+        "pinia": "Reactive state management pattern and store",
+        "tailwind": "Utility-first CSS framework for modern design aesthetics",
+        "primevue": "Rich component library styled with Aura design presets",
+        "typescript": "Strong static typings for enterprise codebase consistency",
+        "laravel": "PHP framework for administrative API & role control (Future)",
+        "postgresql": "Relational database for secure history and profile logs (Future)",
+        "fastapi": "Python API framework for high-throughput AI predictions",
+        "xgb_lgbm": "Gradient boosted tree algorithms achieving 87%+ PR-AUC",
+        "shap": "Game-theoretic approach explaining prediction features"
+      }
     },
     "team": {
       "title": "Research & Development Team",
@@ -238,6 +312,25 @@
   "settings": {
     "title": "Application Preferences",
     "description": "Configure the frontend presentation parameters including theme color palette, multilingual locales, and compact sizes.",
+    "titleLabel": "System Settings",
+    "descriptionLabel": "Configure interface preferences, languages, and endpoint parameters.",
+    "languageConfig": "Language Configuration",
+    "languageDesc": "Select the primary layout display language across administrative elements.",
+    "notificationsTitle": "Notifications Settings",
+    "notificationsDesc": "Configure custom notifications thresholds and advisor digest schedules.",
+    "emailWarnings": "Automatic Email Warnings",
+    "emailWarningsDesc": "Alert advisor instantly when critical risks exceed 90%.",
+    "tuitionAlert": "Tuition Fees Arrears Alert",
+    "tuitionAlertDesc": "Alert warnings for students with unresolved financial arrears.",
+    "weeklyDigest": "Weekly Status Digest",
+    "weeklyDigestDesc": "Send weekly metrics report to registered email.",
+    "apiTitle": "API & System Configurations",
+    "apiDesc": "Set up model endpoint URLs and authentication credentials for backend integration.",
+    "aiEndpoint": "AI Prediction Endpoint (FastAPI)",
+    "adminEndpoint": "Admin Dashboard Gateway API",
+    "activeModel": "Active Model Filename",
+    "saveConnection": "Save Connection",
+    "institution": "Institution",
     "general": {
       "title": "General Configurations",
       "language": "Interface Language",
@@ -245,12 +338,24 @@
     },
     "appearance": {
       "title": "Appearance & Theme",
+      "desc": "Personalize the display mode and primary colors.",
+      "colorMode": "Color Mode",
+      "colorModeDesc": "Select layout display brightness preference.",
+      "lightModeLabel": "Light Mode",
+      "lightModeDesc": "Light interface, ideal for well-lit surroundings",
+      "darkModeLabel": "Dark Mode",
+      "darkModeDesc": "Dark interface, comfortable for low-light settings",
       "mode": "Appearance",
       "lightMode": "Light Mode",
       "darkMode": "Dark Mode",
       "themeColor": "Theme Color",
-      "compactMode": "Compact Row Mode",
-      "compactModeDesc": "Reduces margins and sizes in tables and listings."
+      "themeColorDesc": "Select branding primary color preset.",
+      "displayOptions": "Display Options",
+      "displayOptionsDesc": "Configure secondary row heights and motion styles.",
+      "compactMode": "Compact Layout",
+      "compactModeDesc": "Reduces margins and sizes in tables and listings.",
+      "motion": "Motion Transitions",
+      "motionDesc": "Enable smooth page transitions and panel sliders."
     },
     "system": {
       "title": "System Parameters",
@@ -271,6 +376,32 @@
       "orange": "Sunset Orange",
       "red": "Crimson Red",
       "teal": "Ocean Teal"
+    },
+    "tabs": {
+      "overview": {
+        "title": "Overview",
+        "desc": "System specifications"
+      },
+      "appearance": {
+        "title": "Appearance",
+        "desc": "Theme and display options"
+      },
+      "language": {
+        "title": "Language",
+        "desc": "System active language"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "desc": "Advisory email alerts"
+      },
+      "system": {
+        "title": "System Specs",
+        "desc": "Server API bindings"
+      },
+      "about": {
+        "title": "About Us",
+        "desc": "Project credits & team"
+      }
     }
   },
   "result": {
@@ -287,7 +418,9 @@
     "riskLabel": "SaaS Advisor Alert Level",
     "advisoryCard": "Prescriptive Guidance & Advisor Recommendations",
     "print": "Print Report",
-    "studentProfile": "Student Profile"
+    "studentProfile": "Student Profile",
+    "probShort": "Prob",
+    "noRecommendations": "No specific recommendations provided."
   },
   "risk": {
     "High": "High Risk Level",
@@ -418,5 +551,26 @@
       "Evaluate options for transitioning to evening class attendance to manage daytime commitments.",
       "Consider adjusting credit enrollment load to balance academic and personal requirements."
     ]
+  },
+  "primevue": {
+    "choose": "Choose File",
+    "upload": "Upload",
+    "cancel": "Cancel",
+    "emptyMessage": "No records found",
+    "emptyFilterMessage": "No records found",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "rowsPerPage": "Rows per page",
+    "showing": "Showing"
+  },
+  "toasts": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Information",
+    "predictionCompleted": "Prediction completed",
+    "exportCompleted": "Export completed",
+    "importFailed": "Import failed"
   }
 }

@@ -5,7 +5,15 @@
     "batchPrediction": "Dự Đoán Theo Lô",
     "history": "Lịch Sử Dự Đoán",
     "about": "Giới Thiệu Dự Án",
-    "settings": "Cài Đặt"
+    "settings": "Cài Đặt",
+    "mockModeActive": "Chế độ Giả Lập",
+    "simulatingCleanly": "Hệ thống đang hoạt động bình thường",
+    "groups": {
+      "overview": "TỔNG QUAN",
+      "predictions": "DỰ ĐOÁN",
+      "information": "THÔNG TIN",
+      "system": "HỆ THỐNG"
+    }
   },
   "header": {
     "earlyWarningSystem": "Hệ Thống Cảnh Báo Sớm Sinh Viên",
@@ -33,7 +41,21 @@
     "actions": "Thao Tác",
     "success": "Thành Công",
     "warning": "Cảnh Báo",
-    "error": "Lỗi"
+    "error": "Lỗi",
+    "backToTop": "Lên đầu trang",
+    "singleEval": "Đánh giá đơn",
+    "batchRun": "Đánh giá theo lô",
+    "viewAll": "Xem Tất Cả",
+    "total": "Tổng cộng",
+    "students": "sinh viên",
+    "student": "sinh viên",
+    "totalCountStudents": "Tổng cộng {count} sinh viên",
+    "processingRequest": "Đang Xử Lý Yêu Cầu",
+    "analyzingData": "Đang phân tích dữ liệu. Vui lòng chờ trong giây lát...",
+    "step": "Bước",
+    "demoMode": "Chế độ Demo",
+    "removeFile": "Xóa tệp",
+    "resetForm": "Đặt Lại"
   },
   "dashboard": {
     "title": "Trung Tâm Điều Hành Cố Vấn",
@@ -62,7 +84,16 @@
     "inspectBatch": "Kiểm Tra Lịch Sử Lô",
     "noSingle": "Chưa có dự đoán đơn nào được ghi nhận.",
     "noBatch": "Chưa có dự đoán theo lô nào được ghi nhận.",
-    "batchLog": "Nhật Ký Lô"
+    "batchLog": "Nhật Ký Lô",
+    "recentPredictionsTable": "Kiểm Tra Dự Đoán Gần Đây",
+    "importId": "Mã Nhập Khẩu",
+    "shortStudents": "Sinh viên",
+    "shortGraduates": "Tốt nghiệp",
+    "shortDropouts": "Thôi học",
+    "activity": {
+      "singleMsg": "Hoàn thành dự đoán đơn cho sinh viên {name}. Kết quả: {outcome} (xác suất {prob}%, Rủi ro: {risk}).",
+      "batchMsg": "Hoàn thành dự đoán theo lô cho {count} sinh viên. Thống kê kết quả: {summary}."
+    }
   },
   "singlePrediction": {
     "title": "Hồ Sơ Đánh Giá Sinh Viên",
@@ -85,7 +116,10 @@
       "family": "Hoàn Cảnh Gia Đình & Tài Chính",
       "financial": "Chỉ Số Tài Chính & Hỗ Trợ",
       "academic": "Kết Quả Học Tập & Kinh Tế Vĩ Mô",
-      "review": "Xem Lại Các Chỉ Số Đã Nhập"
+      "review": "Xem Lại Các Chỉ Số Đã Nhập",
+      "sem1Performance": "Kết Quả Học Tập Học Kỳ 1",
+      "sem2Performance": "Kết Quả Học Tập Học Kỳ 2",
+      "economic": "Chỉ Số Kinh Tế Vĩ Mô"
     },
     "fields": {
       "studentCode": "Mã Số Sinh Viên",
@@ -145,7 +179,31 @@
     "triggerPredict": "Chạy Tính Toán Cảnh Báo",
     "predictionComplete": "Đã Hoàn Thành Phân Tích Cảnh Báo",
     "closeDialog": "Đóng Báo Cáo",
-    "identificationNote": "Các trường định danh này chỉ dùng để hiển thị trên giao diện và sẽ KHÔNG được gửi tới mô hình học máy."
+    "identificationNote": "Các trường định danh này chỉ dùng để hiển thị trên giao diện và sẽ KHÔNG được gửi tới mô hình học máy.",
+    "hints": {
+      "scholarship": "Học bổng đang hoạt động",
+      "debtor": "Đang nợ học phí",
+      "tuitionFees": "Đã đóng đủ học phí",
+      "displaced": "Đang trọ học xa nhà",
+      "specialNeeds": "Cần hỗ trợ đặc biệt"
+    },
+    "reviewDesc": "Kiểm tra lại các chỉ số nhân khẩu học, tuyển sinh, gia cảnh, tài chính và học tập trước khi chạy mô hình AI.",
+    "analysisSteps": [
+      "Đang phân tích thông tin sinh viên...",
+      "Đang đánh giá kết quả học tập...",
+      "Đang kiểm tra chỉ số tài chính...",
+      "Đang chạy mô hình dự đoán...",
+      "Đang tính toán mức độ tin cậy...",
+      "Hoàn tất dự đoán."
+    ],
+    "summaryLabels": {
+      "credited": "Miễn giảm",
+      "enrolled": "Đăng ký",
+      "evaluations": "Đánh giá",
+      "approved": "Đạt",
+      "avgGrade": "Điểm TB (0-20)",
+      "noEval": "Không Đánh Giá"
+    }
   },
   "batchPrediction": {
     "title": "Chạy Dự Đoán Theo Lô Spreadsheet",
@@ -159,7 +217,8 @@
     "processing": "Đang thực hiện tính toán rủi ro trên công cụ AI...",
     "preview": "Xem Trước Hàng Bảng Tính & Nhập Liệu (Tìm thấy {count} dòng)",
     "results": "Báo Cáo Tính Toán Theo Lô (Đã xử lý {count} sinh viên)",
-    "exportBtn": "Xuất Báo Cáo Phân Tích Excel"
+    "exportBtn": "Xuất Báo Cáo Phân Tích Excel",
+    "moreRecords": "Và thêm {count} hồ sơ sinh viên khác..."
   },
   "history": {
     "title": "Nhật Ký & Kiểm Toán Cảnh Báo",
@@ -205,7 +264,8 @@
       "title": "Hồ Sơ Dữ Liệu: UCI Student Attrition",
       "p1": "Trình xử lý AI của SEWS sử dụng bộ dữ liệu 'Predict Students' Dropout and Academic Success' từ Kho lưu trữ Học máy UCI (Mã số: 697). Dữ liệu thu thập từ một cơ sở giáo dục đại học tại Bồ Đào Nha. Bộ dữ liệu chứa 4,424 bản ghi với 36 thuộc tính học tập và nhân khẩu học chính.",
       "records": "Số Lượng Bản Ghi",
-      "features": "Số Lượng Thuộc Tính"
+      "features": "Số Lượng Thuộc Tính",
+      "macro": "Kinh tế vĩ mô"
     },
     "algorithms": {
       "title": "Thuật Toán Huấn Luyện (Phân Loại Ensemble)",
@@ -214,7 +274,9 @@
       "xgb": "XGBoost",
       "xgbDesc": "Thư viện tăng cường độ dốc (gradient boosting) tối ưu hóa được thiết kế hiệu quả, linh hoạt và di động. Đạt hiệu năng cực cao trên dữ liệu bảng phức tạp.",
       "lgbm": "LightGBM",
-      "lgbmDesc": "Phát triển bởi Microsoft, sử dụng các thuật toán học dựa trên cây. Tốc độ huấn luyện nhanh, tiết kiệm bộ nhớ và xử lý dữ liệu dạng phân loại rất tốt."
+      "lgbmDesc": "Phát triển bởi Microsoft, sử dụng các thuật toán học dựa trên cây. Tốc độ huấn luyện nhanh, tiết kiệm bộ nhớ và xử lý dữ liệu dạng phân loại rất tốt.",
+      "bagging": "Phương pháp Bagging",
+      "gradient": "Tăng cường độ dốc (Boosting)"
     },
     "stack": {
       "title": "Kiến Trúc Hệ Thống Độc Lập",
@@ -224,7 +286,19 @@
       "gatewayDesc": "Laravel 11, Quản lý hành chính & Cơ sở dữ liệu PostgreSQL (Tương lai).",
       "gatewayNote": "Không có yêu cầu API backend nào được thực hiện trong giai đoạn này. Client sử dụng giả lập dữ liệu cục bộ.",
       "classifier": "Bộ Phân Loại AI (Tích Hợp Tương Lai)",
-      "classifierDesc": "FastAPI, Mô hình XGBoost/LightGBM, Giải thích SHAP (Explainable AI)."
+      "classifierDesc": "FastAPI, Mô hình XGBoost/LightGBM, Giải thích SHAP (Explainable AI).",
+      "desc": {
+        "vue": "Khung JavaScript tiến trình cho các thành phần giao diện",
+        "pinia": "Mô hình quản lý trạng thái phản ứng và kho lưu trữ",
+        "tailwind": "Khung CSS tiện ích cho thẩm mỹ thiết kế hiện đại",
+        "primevue": "Thư viện thành phần phong phú với cài đặt sẵn thiết kế Aura",
+        "typescript": "Kiểu dữ liệu tĩnh mạnh mẽ cho sự nhất quán của mã nguồn",
+        "laravel": "Khung PHP cho API quản trị và kiểm soát vai trò (Tương lai)",
+        "postgresql": "Cơ sở dữ liệu quan hệ cho nhật ký lịch sử và hồ sơ bảo mật (Tương lai)",
+        "fastapi": "Khung API Python cho các dự báo AI thông lượng cao",
+        "xgb_lgbm": "Thuật toán cây tăng cường đạt PR-AUC 87%+",
+        "shap": "Phương pháp lý thuyết trò chơi giải thích các đặc tính dự đoán"
+      }
     },
     "team": {
       "title": "Đội Ngũ Nghiên Cứu & Phát Triển",
@@ -238,6 +312,25 @@
   "settings": {
     "title": "Tùy Chọn Ứng Dụng",
     "description": "Cấu hình các tham số hiển thị giao diện bao gồm tông màu chủ đạo, ngôn ngữ đa ngữ và hiển thị bảng gọn nhẹ.",
+    "titleLabel": "Cài Đặt Hệ Thống",
+    "descriptionLabel": "Cấu hình các tham số giao diện, ngôn ngữ hiển thị và cấu hình API kết nối hệ thống.",
+    "languageConfig": "Cấu Hình Ngôn Ngữ",
+    "languageDesc": "Chọn ngôn ngữ hiển thị chính thức của toàn bộ hệ thống.",
+    "notificationsTitle": "Cài Đặt Thông Báo",
+    "notificationsDesc": "Định cấu hình các cảnh báo tự động gửi về Email hoặc Telegram của cố vấn học tập.",
+    "emailWarnings": "Cảnh báo Email tự động",
+    "emailWarningsDesc": "Gửi mail khi phát hiện sinh viên rủi ro bỏ học rất cao.",
+    "tuitionAlert": "Cảnh báo nợ học phí",
+    "tuitionAlertDesc": "Cảnh báo định kỳ khi nợ học phí của sinh viên kéo dài.",
+    "weeklyDigest": "Nhận báo cáo hàng tuần",
+    "weeklyDigestDesc": "Tóm tắt tổng số lượt cảnh báo học vụ mỗi cuối tuần.",
+    "apiTitle": "Cấu Hình Tích Hợp API / AI",
+    "apiDesc": "Định cấu hình các đường dẫn API Gateway phục vụ tích hợp sau này.",
+    "aiEndpoint": "API Dự đoán (FastAPI AI Server)",
+    "adminEndpoint": "API Quản trị (Laravel Dashboard Service)",
+    "activeModel": "Tên Tệp Mô Hình AI Đang Chạy",
+    "saveConnection": "Lưu Kết Nối",
+    "institution": "Cơ Quan Chủ Quản",
     "general": {
       "title": "Cấu Hình Chung",
       "language": "Ngôn Ngữ Hệ Thống",
@@ -245,12 +338,24 @@
     },
     "appearance": {
       "title": "Giao Diện & Tông Màu",
-      "mode": "Chế Độ Giao Diện",
+      "desc": "Tùy chỉnh giao diện hiển thị của hệ thống",
+      "colorMode": "Chế độ màu",
+      "colorModeDesc": "Chọn chế độ hiển thị phù hợp với mắt của bạn",
+      "lightModeLabel": "Giao diện sáng",
+      "lightModeDesc": "Giao diện sáng, phù hợp cho môi trường có ánh sáng mạnh",
+      "darkModeLabel": "Giao diện tối",
+      "darkModeDesc": "Giao diện tối, phù hợp cho môi trường ánh sáng yếu",
+      "mode": "Giao Diện",
       "lightMode": "Giao Diện Sáng",
       "darkMode": "Giao Diện Tối",
       "themeColor": "Tông Màu Chủ Đạo",
+      "themeColorDesc": "Chọn màu sắc chủ đạo cho hệ thống",
+      "displayOptions": "Giao diện",
+      "displayOptionsDesc": "Các tùy chọn hiển thị khác",
       "compactMode": "Hiển Thị Dòng Gọn Nhẹ",
-      "compactModeDesc": "Giảm lề và kích thước chữ trong bảng dữ liệu."
+      "compactModeDesc": "Giảm lề và kích thước chữ trong bảng dữ liệu.",
+      "motion": "Hiệu ứng chuyển động",
+      "motionDesc": "Bật/tắt các hiệu ứng chuyển động mượt mà"
     },
     "system": {
       "title": "Tham Số Hệ Thống",
@@ -271,6 +376,32 @@
       "orange": "Cam Hoàng Hôn",
       "red": "Đỏ Crimson",
       "teal": "Xanh Ngọc Teal"
+    },
+    "tabs": {
+      "overview": {
+        "title": "Tổng Quan",
+        "desc": "Thông tin hệ thống"
+      },
+      "appearance": {
+        "title": "Giao Diện",
+        "desc": "Giao diện và hiển thị"
+      },
+      "language": {
+        "title": "Ngôn Ngữ",
+        "desc": "Ngôn ngữ hiển thị"
+      },
+      "notifications": {
+        "title": "Thông Báo",
+        "desc": "Cài đặt thông báo"
+      },
+      "system": {
+        "title": "Hệ Thống",
+        "desc": "Cài đặt phần cứng/API"
+      },
+      "about": {
+        "title": "Giới Thiệu",
+        "desc": "Về hệ thống & nhóm"
+      }
     }
   },
   "result": {
@@ -287,7 +418,9 @@
     "riskLabel": "Mức Độ Rủi Ro Cố Vấn",
     "advisoryCard": "Khuyến Nghị Điều Hướng Hỗ Trợ Từ Cố Vấn Học Tập",
     "print": "In Báo Cáo",
-    "studentProfile": "Hồ Sơ Sinh Viên"
+    "studentProfile": "Hồ Sơ Sinh Viên",
+    "probShort": "X.Suất",
+    "noRecommendations": "Không có khuyến nghị cụ thể nào được cung cấp."
   },
   "risk": {
     "High": "Mức Độ Rủi Ro Cao",
@@ -418,5 +551,26 @@
       "Đánh giá phương án chuyển sang học ca tối để cân bằng các cam kết cá nhân ban ngày.",
       "Cân nhắc điều chỉnh khối lượng tín chỉ đăng ký để giảm bớt áp lực học tập."
     ]
+  },
+  "primevue": {
+    "choose": "Chọn Tệp",
+    "upload": "Tải Lên",
+    "cancel": "Hủy Bỏ",
+    "emptyMessage": "Không tìm thấy dữ liệu",
+    "emptyFilterMessage": "Không tìm thấy dữ liệu bộ lọc",
+    "search": "Tìm kiếm",
+    "filter": "Bộ lọc",
+    "clear": "Xóa bộ lọc",
+    "rowsPerPage": "Số dòng trên trang",
+    "showing": "Hiển thị"
+  },
+  "toasts": {
+    "success": "Thành công",
+    "error": "Lỗi",
+    "warning": "Cảnh báo",
+    "info": "Thông tin",
+    "predictionCompleted": "Đã hoàn thành dự đoán",
+    "exportCompleted": "Đã hoàn thành xuất file",
+    "importFailed": "Nhập dữ liệu thất bại"
   }
 }

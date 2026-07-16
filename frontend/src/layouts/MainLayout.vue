@@ -3,6 +3,7 @@ import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import { useSettingsStore } from '../stores/settings.store';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { usePrimeVue } from 'primevue/config';
 import AppHeader from '../components/layout/AppHeader.vue';
 import AppSidebar from '../components/layout/AppSidebar.vue';
 import AppFooter from '../components/layout/AppFooter.vue';
@@ -11,6 +12,7 @@ import ConfirmDialog from '../components/common/ConfirmDialog.vue';
 const settingsStore = useSettingsStore();
 const route = useRoute();
 const i18n = useI18n();
+const primevue = usePrimeVue();
 
 const mainContentRef = ref<HTMLElement | null>(null);
 const isScrolled = ref(false);
@@ -61,8 +63,36 @@ watch(
   }
 );
 
+const updatePrimeVueLocale = () => {
+  if (primevue && primevue.config && primevue.config.locale) {
+    const locale = primevue.config.locale as any;
+    locale.choose = i18n.t('primevue.choose');
+    locale.upload = i18n.t('primevue.upload');
+    locale.cancel = i18n.t('primevue.cancel');
+    locale.emptyMessage = i18n.t('primevue.emptyMessage');
+    locale.emptyFilterMessage = i18n.t('primevue.emptyFilterMessage');
+    locale.search = i18n.t('primevue.search');
+    locale.filter = i18n.t('primevue.filter');
+    locale.clear = i18n.t('primevue.clear');
+    locale.aria = {
+      ...locale.aria,
+      rowsPerPageLabel: i18n.t('primevue.rowsPerPage'),
+      pageLabel: i18n.t('primevue.showing'),
+    };
+  }
+};
+
+watch(
+  () => settingsStore.language,
+  (newLang) => {
+    i18n.locale.value = newLang;
+    updatePrimeVueLocale();
+  }
+);
+
 onMounted(() => {
   i18n.locale.value = settingsStore.language;
+  updatePrimeVueLocale();
 });
 </script>
 
@@ -119,7 +149,7 @@ onMounted(() => {
                flex items-center justify-center border border-gray-200 dark:border-gray-700/60
                text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400
                cursor-pointer shadow-lg shadow-gray-200/50 dark:shadow-[#05070c]/50 z-30 transition-all duration-200 hover:scale-105 active:scale-95"
-        :title="settingsStore.language === 'vi' ? 'Lên đầu trang' : 'Back to top'"
+        :title="$t('general.backToTop')"
       >
         <i class="fa-solid fa-arrow-up text-xs"></i>
       </button>

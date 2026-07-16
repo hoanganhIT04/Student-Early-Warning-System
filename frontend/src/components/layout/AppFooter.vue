@@ -5,7 +5,7 @@
       <div class="flex items-center space-x-4">
         <span>{{ $t('settings.system.version') }} v1.0.0-beta</span>
         <span class="text-gray-300 dark:text-gray-700">|</span>
-        <span class="hover:text-primary-500 cursor-pointer">Demo Mode</span>
+        <span class="hover:text-primary-500 cursor-pointer">{{ $t('general.demoMode') }}</span>
       </div>
     </div>
   </footer>

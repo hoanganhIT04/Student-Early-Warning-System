@@ -306,7 +306,7 @@ const progressPercent = computed(() => {
       <div class="lg:hidden flex items-center justify-between">
         <div class="space-y-1">
           <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest block">
-            {{ $t('general.loading').startsWith('L') ? 'Step' : 'Bước' }} {{ currentStep }} / 5
+            {{ t('general.step') }} {{ currentStep }} / 5
           </span>
           <h4 class="text-sm font-bold text-gray-900 dark:text-white leading-none">
             {{ steps[currentStep - 1]?.label || '' }}
@@ -445,7 +445,7 @@ const progressPercent = computed(() => {
               <div class="flex items-center justify-between p-3.5 bg-gray-50/50 dark:bg-gray-800/40 rounded-xl border border-gray-150 dark:border-gray-800">
                 <div class="flex flex-col space-y-0.5">
                   <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ $t('singlePrediction.fields.scholarshipHolder') }}</span>
-                  <span class="text-[10px] text-gray-400 font-semibold">{{ $t('general.loading').startsWith('L') ? 'Active school scholarship' : 'Học bổng đang hoạt động' }}</span>
+                  <span class="text-[10px] text-gray-400 font-semibold">{{ t('singlePrediction.hints.scholarship') }}</span>
                 </div>
                 <ToggleSwitch v-model="isScholarshipHolder" />
               </div>
@@ -454,7 +454,7 @@ const progressPercent = computed(() => {
               <div class="flex items-center justify-between p-3.5 bg-gray-50/50 dark:bg-gray-800/40 rounded-xl border border-gray-150 dark:border-gray-800">
                 <div class="flex flex-col space-y-0.5">
                   <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ $t('singlePrediction.fields.debtor') }}</span>
-                  <span class="text-[10px] text-gray-400 font-semibold">{{ $t('general.loading').startsWith('L') ? 'Has tuition/fees arrears' : 'Đang nợ học phí' }}</span>
+                  <span class="text-[10px] text-gray-400 font-semibold">{{ t('singlePrediction.hints.debtor') }}</span>
                 </div>
                 <ToggleSwitch v-model="isDebtor" />
               </div>
@@ -463,7 +463,7 @@ const progressPercent = computed(() => {
               <div class="flex items-center justify-between p-3.5 bg-gray-50/50 dark:bg-gray-800/40 rounded-xl border border-gray-150 dark:border-gray-800">
                 <div class="flex flex-col space-y-0.5">
                   <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ $t('singlePrediction.fields.tuitionFeesUpToDate') }}</span>
-                  <span class="text-[10px] text-gray-400 font-semibold">{{ $t('general.loading').startsWith('L') ? 'Fees are fully up to date' : 'Đã đóng đủ học phí' }}</span>
+                  <span class="text-[10px] text-gray-400 font-semibold">{{ t('singlePrediction.hints.tuitionFees') }}</span>
                 </div>
                 <ToggleSwitch v-model="isTuitionFeesUpToDate" />
               </div>
@@ -472,7 +472,7 @@ const progressPercent = computed(() => {
               <div class="flex items-center justify-between p-3.5 bg-gray-50/50 dark:bg-gray-800/40 rounded-xl border border-gray-150 dark:border-gray-800">
                 <div class="flex flex-col space-y-0.5">
                   <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ $t('singlePrediction.fields.displaced') }}</span>
-                  <span class="text-[10px] text-gray-400 font-semibold">{{ $t('general.loading').startsWith('L') ? 'Living away from home' : 'Đang trọ học xa nhà' }}</span>
+                  <span class="text-[10px] text-gray-400 font-semibold">{{ t('singlePrediction.hints.displaced') }}</span>
                 </div>
                 <ToggleSwitch v-model="isDisplaced" />
               </div>
@@ -481,7 +481,7 @@ const progressPercent = computed(() => {
               <div class="flex items-center justify-between p-3.5 bg-gray-50/50 dark:bg-gray-800/40 rounded-xl border border-gray-150 dark:border-gray-800">
                 <div class="flex flex-col space-y-0.5">
                   <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ $t('singlePrediction.fields.educationalSpecialNeeds') }}</span>
-                  <span class="text-[10px] text-gray-400 font-semibold">{{ $t('general.loading').startsWith('L') ? 'Requires educational aid' : 'Cần hỗ trợ đặc biệt' }}</span>
+                  <span class="text-[10px] text-gray-400 font-semibold">{{ t('singlePrediction.hints.specialNeeds') }}</span>
                 </div>
                 <ToggleSwitch v-model="isEducationalSpecialNeeds" />
               </div>
@@ -494,31 +494,31 @@ const progressPercent = computed(() => {
           <!-- Semester 1 -->
           <div class="bg-gray-50 dark:bg-gray-800/30 border border-gray-100 dark:border-gray-800 rounded-xl p-4">
             <h5 class="text-xs font-extrabold text-gray-500 dark:text-gray-400 pb-2 mb-4 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
-              {{ $t('general.loading').startsWith('L') ? 'Semester 1 Academic Performance' : 'Kết Quả Học Tập Học Kỳ 1' }}
+              {{ t('singlePrediction.sections.sem1Performance') }}
             </h5>
             <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem1Cred" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ $t('general.loading').startsWith('L') ? 'Units Credited' : 'Tín Chỉ Miễn Giảm' }}</label>
+                <label for="sem1Cred" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ t('singlePrediction.summaryLabels.credited') }}</label>
                 <InputNumber id="sem1Cred" v-model="form.sem1Credited" :min="0" fluid />
               </div>
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem1Enrolled" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ $t('general.loading').startsWith('L') ? 'Units Enrolled' : 'Tín Chỉ Đăng Ký' }}</label>
+                <label for="sem1Enrolled" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ t('singlePrediction.summaryLabels.enrolled') }}</label>
                 <InputNumber id="sem1Enrolled" v-model="form.sem1Enrolled" :min="0" fluid />
               </div>
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem1Eval" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ $t('general.loading').startsWith('L') ? 'Evaluations' : 'Lượt Đánh Giá' }}</label>
+                <label for="sem1Eval" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ t('singlePrediction.summaryLabels.evaluations') }}</label>
                 <InputNumber id="sem1Eval" v-model="form.sem1Evaluations" :min="0" fluid />
               </div>
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem1Appr" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ $t('general.loading').startsWith('L') ? 'Approved Units' : 'Tín Chỉ Đạt' }}</label>
+                <label for="sem1Appr" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ t('singlePrediction.summaryLabels.approved') }}</label>
                 <InputNumber id="sem1Appr" v-model="form.sem1Approved" :min="0" fluid />
               </div>
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem1Grade" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight">{{ $t('general.loading').startsWith('L') ? 'Avg. Grade (0-20)' : 'Điểm TB (0-20)' }}</label>
+                <label for="sem1Grade" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight">{{ t('singlePrediction.summaryLabels.avgGrade') }}</label>
                 <InputNumber id="sem1Grade" v-model="form.sem1Grade" :min="0" :max="20" :minFractionDigits="1" :maxFractionDigits="2" fluid />
               </div>
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem1NoEval" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ $t('general.loading').startsWith('L') ? 'No Evaluation' : 'Không Đánh Giá' }}</label>
+                <label for="sem1NoEval" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ t('singlePrediction.summaryLabels.noEval') }}</label>
                 <InputNumber id="sem1NoEval" v-model="form.sem1WithoutEvaluations" :min="0" fluid />
               </div>
             </div>
@@ -527,31 +527,31 @@ const progressPercent = computed(() => {
           <!-- Semester 2 -->
           <div class="bg-gray-50 dark:bg-gray-800/30 border border-gray-100 dark:border-gray-800 rounded-xl p-4">
             <h5 class="text-xs font-extrabold text-gray-500 dark:text-gray-400 pb-2 mb-4 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
-              {{ $t('general.loading').startsWith('L') ? 'Semester 2 Academic Performance' : 'Kết Quả Học Tập Học Kỳ 2' }}
+              {{ t('singlePrediction.sections.sem2Performance') }}
             </h5>
             <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem2Cred" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ $t('general.loading').startsWith('L') ? 'Units Credited' : 'Tín Chỉ Miễn Giảm' }}</label>
+                <label for="sem2Cred" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ t('singlePrediction.summaryLabels.credited') }}</label>
                 <InputNumber id="sem2Cred" v-model="form.sem2Credited" :min="0" fluid />
               </div>
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem2Enrolled" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ $t('general.loading').startsWith('L') ? 'Units Enrolled' : 'Tín Chỉ Đăng Ký' }}</label>
+                <label for="sem2Enrolled" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ t('singlePrediction.summaryLabels.enrolled') }}</label>
                 <InputNumber id="sem2Enrolled" v-model="form.sem2Enrolled" :min="0" fluid />
               </div>
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem2Eval" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ $t('general.loading').startsWith('L') ? 'Evaluations' : 'Lượt Đánh Giá' }}</label>
+                <label for="sem2Eval" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ t('singlePrediction.summaryLabels.evaluations') }}</label>
                 <InputNumber id="sem2Eval" v-model="form.sem2Evaluations" :min="0" fluid />
               </div>
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem2Appr" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ $t('general.loading').startsWith('L') ? 'Approved Units' : 'Tín Chỉ Đạt' }}</label>
+                <label for="sem2Appr" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ t('singlePrediction.summaryLabels.approved') }}</label>
                 <InputNumber id="sem2Appr" v-model="form.sem2Approved" :min="0" fluid />
               </div>
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem2Grade" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight">{{ $t('general.loading').startsWith('L') ? 'Avg. Grade (0-20)' : 'Điểm TB (0-20)' }}</label>
+                <label for="sem2Grade" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight">{{ t('singlePrediction.summaryLabels.avgGrade') }}</label>
                 <InputNumber id="sem2Grade" v-model="form.sem2Grade" :min="0" :max="20" :minFractionDigits="1" :maxFractionDigits="2" fluid />
               </div>
               <div class="flex flex-col space-y-1.5 min-w-0">
-                <label for="sem2NoEval" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ $t('general.loading').startsWith('L') ? 'No Evaluation' : 'Không Đánh Giá' }}</label>
+                <label for="sem2NoEval" class="text-[10px] font-bold text-gray-500 dark:text-gray-400 leading-tight truncate">{{ t('singlePrediction.summaryLabels.noEval') }}</label>
                 <InputNumber id="sem2NoEval" v-model="form.sem2WithoutEvaluations" :min="0" fluid />
               </div>
             </div>
@@ -560,7 +560,7 @@ const progressPercent = computed(() => {
           <!-- Economic indicators -->
           <div class="bg-gray-50 dark:bg-gray-800/30 border border-gray-100 dark:border-gray-800 rounded-xl p-4">
             <h5 class="text-xs font-extrabold text-gray-500 dark:text-gray-400 pb-2 mb-4 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
-              {{ $t('general.loading').startsWith('L') ? 'National Economic Indicators' : 'Chỉ Số Kinh Tế Vĩ Mô' }}
+              {{ t('singlePrediction.sections.economic') }}
             </h5>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div class="flex flex-col space-y-1.5 min-w-0">
@@ -582,11 +582,11 @@ const progressPercent = computed(() => {
         <!-- STEP 5: Review -->
         <div v-else-if="currentStep === 5" class="space-y-5">
           <div class="space-y-1 pb-1">
-            <h5 class="text-sm font-bold text-gray-800 dark:text-gray-200">
+            <h5 class="text-sm font-bold text-gray-880 dark:text-gray-200">
               {{ $t('singlePrediction.sections.review') }}
             </h5>
             <p class="text-xs font-medium text-gray-400 dark:text-gray-550">
-              {{ $t('general.loading').startsWith('L') ? 'Review entered demographic, admission, family, financial, and academic indicators before running the AI simulation.' : 'Kiểm tra lại các chỉ số nhân khẩu học, tuyển sinh, gia cảnh, tài chính và học tập trước khi chạy mô hình AI.' }}
+              {{ t('singlePrediction.reviewDesc') }}
             </p>
           </div>
           
@@ -599,7 +599,7 @@ const progressPercent = computed(() => {
     <!-- Navigation Control Buttons -->
     <div class="flex items-center justify-between">
       <Button 
-        :label="$t('general.loading').startsWith('L') ? 'Reset Form' : 'Đặt Lại'"
+        :label="t('general.resetForm')"
         icon="fa-solid fa-arrows-rotate"
         severity="secondary"
         @click="resetForm"

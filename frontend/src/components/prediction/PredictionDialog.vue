@@ -116,7 +116,7 @@ const headerTheme = computed(() => {
             <span class="text-lg font-black text-gray-900 dark:text-white leading-none">
               {{ formatPercent(result.probability) }}
             </span>
-            <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">Prob</span>
+            <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">{{ $t('result.probShort') }}</span>
           </div>
         </div>
       </div>
