@@ -8,6 +8,55 @@ const { t } = useI18n();
 defineProps<{
   events: ActivityTimelineEvent[];
 }>();
+
+const formatEventMessage = (event: any) => {
+  if (!event || !event.message) return '';
+  const msg = event.message;
+
+  // Try matching single predictions: "Single prediction completed for [Name]: [Prediction] ([Prob]% probability, [Risk] Risk)"
+  const singleMatch = msg.match(/Single prediction completed for\s+(.+?):\s+(\w+)\s+\((\d+)%\s+probability(?:,\s+(\w+)\s+Risk)?\)/i);
+  if (singleMatch) {
+    const [, name, prediction, prob, risk] = singleMatch;
+    const tPrediction = t(`outcomes.${prediction}`) || prediction;
+    const tRisk = risk ? (t(`risk.${risk}`) || risk) : '';
+    return t('dashboard.activity.singleMsg', {
+      name,
+      outcome: tPrediction,
+      prob,
+      risk: tRisk
+    });
+  }
+
+  // Try matching batch predictions: "Batch prediction completed for [Count] rows: [Breakdown]"
+  const batchMatch = msg.match(/Batch prediction (?:run\s+)?completed for\s+(\d+)\s+rows(?::\s+(.+))?/i);
+  if (batchMatch) {
+    const [, count, breakdown] = batchMatch;
+    let translatedSummary = '';
+    if (breakdown) {
+      const parts = breakdown.split(/\s*\/\s*/);
+      const translatedParts = parts.map((part: string) => {
+        const m = part.trim().match(/^(\d+)\s+(\w+?)(s)?$/i);
+        if (m && m[2]) {
+          const num = m[1];
+          const word = m[2];
+          let singularWord = word;
+          if (word.toLowerCase() === 'graduates') singularWord = 'Graduate';
+          if (word.toLowerCase() === 'enrolled') singularWord = 'Enrolled';
+          if (word.toLowerCase() === 'dropouts' || word.toLowerCase() === 'dropout') singularWord = 'Dropout';
+          return `${num} ${t(`outcomes.${singularWord}`) || word}`;
+        }
+        return part;
+      });
+      translatedSummary = translatedParts.join(' / ');
+    }
+    return t('dashboard.activity.batchMsg', {
+      count,
+      summary: translatedSummary
+    });
+  }
+
+  return msg;
+};
 </script>
 
 <template>
@@ -17,7 +66,7 @@ defineProps<{
       <div class="flex items-center space-x-2">
         <i class="fa-solid fa-bell text-primary-500 text-xs"></i>
         <h4 class="text-sm font-bold text-gray-880 dark:text-gray-100 tracking-tight">
-          {{ t('dashboard.activityTitle') || 'Recent Activity' }}
+          {{ t('dashboard.activityFeed') }}
         </h4>
       </div>
       <span class="text-[9px] font-extrabold text-gray-300 dark:text-gray-600 uppercase tracking-widest leading-none">
@@ -30,7 +79,7 @@ defineProps<{
       <div v-if="events.length === 0" class="py-8 text-center">
         <i class="fa-solid fa-clock-rotate-left text-2xl text-gray-300 dark:text-gray-600 mb-2 block animate-pulse"></i>
         <span class="text-xs font-semibold text-gray-400 dark:text-gray-500">
-          {{ t('dashboard.noActivity') || 'No recent system events logged.' }}
+          {{ t('dashboard.noActivity') }}
         </span>
       </div>
 
@@ -57,8 +106,8 @@ defineProps<{
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-bold text-gray-700 dark:text-gray-200">
                 {{ event.type === 'single'
-                   ? (t('general.singleEval') || 'Single Evaluation')
-                   : (t('general.batchRun') || 'Batch Run') }}
+                   ? t('general.singleEval')
+                   : t('general.batchRun') }}
               </span>
               <time class="text-[10px] text-gray-400 dark:text-gray-500 font-semibold ml-3 whitespace-nowrap">
                 {{ formatRelativeTime(event.timestamp) }}
@@ -66,7 +115,7 @@ defineProps<{
             </div>
 
             <p class="text-[11px] text-gray-500 dark:text-gray-400 font-medium leading-relaxed">
-              {{ event.message }}
+              {{ formatEventMessage(event) }}
             </p>
 
             <!-- Mini badges: studentCode + prediction -->
@@ -86,7 +135,7 @@ defineProps<{
                   'bg-amber-50 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400'
                 ]"
               >
-                {{ event.prediction }}
+                {{ t('outcomes.' + event.prediction) }}
               </span>
             </div>
           </div>

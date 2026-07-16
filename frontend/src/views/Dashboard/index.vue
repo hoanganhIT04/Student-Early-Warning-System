@@ -289,7 +289,7 @@ const handleViewRecord = (id: string) => {
                 <div class="flex items-start justify-between gap-3">
                   <div class="min-w-0">
                     <h5 class="text-sm font-black text-gray-900 dark:text-white leading-tight">
-                      Import ID: {{ data.latestBatch.id }}
+                      {{ $t('dashboard.importId') }}: {{ data.latestBatch.id }}
                     </h5>
                     <span class="text-[10px] text-gray-400 font-bold block mt-0.5">
                       {{ formatDate(data.latestBatch.date) }}
@@ -298,7 +298,7 @@ const handleViewRecord = (id: string) => {
                   <span class="px-2 py-1 rounded-lg text-[10px] font-bold
                                bg-primary-50 text-primary-600 border border-primary-100/50
                                dark:bg-primary-950/20 dark:text-primary-400 dark:border-primary-900/60 flex-shrink-0">
-                    Batch
+                    {{ $t('history.filters.batch') }}
                   </span>
                 </div>
 
@@ -306,7 +306,7 @@ const handleViewRecord = (id: string) => {
                             border border-gray-150 dark:border-gray-800 text-center">
                   <div>
                     <span class="block text-[9px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">
-                      Students
+                      {{ $t('dashboard.shortStudents') }}
                     </span>
                     <span class="text-xs font-bold text-gray-800 dark:text-gray-200 tabular-nums">
                     {{ data.latestBatch.total }}
@@ -314,7 +314,7 @@ const handleViewRecord = (id: string) => {
                   </div>
                   <div>
                     <span class="block text-[9px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">
-                      Graduates
+                      {{ $t('dashboard.shortGraduates') }}
                     </span>
                     <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
                     {{ data.latestBatch.graduates }}
@@ -322,7 +322,7 @@ const handleViewRecord = (id: string) => {
                   </div>
                   <div>
                     <span class="block text-[9px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">
-                      Dropouts
+                      {{ $t('dashboard.shortDropouts') }}
                     </span>
                     <span class="text-xs font-bold text-red-500 dark:text-red-400 tabular-nums">
                     {{ data.latestBatch.dropouts }}

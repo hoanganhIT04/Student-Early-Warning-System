@@ -35,6 +35,38 @@ const toggleRow = (id: string) => {
   }
 };
 
+const translateResultSummary = (summary: string) => {
+  if (!summary) return '';
+  
+  // Try matching single predictions: "1 [Prediction] ([Risk] Risk)"
+  const singleMatch = summary.match(/^1\s+(\w+)\s+\((\w+)\s+Risk\)$/i);
+  if (singleMatch) {
+    const [, prediction, risk] = singleMatch;
+    const tPrediction = t(`outcomes.${prediction}`) || prediction;
+    const tRisk = t(`risk.${risk}`) || risk;
+    return `1 ${tPrediction} (${tRisk})`;
+  }
+
+  // Try parsing multiple parts like "3 Graduates / 1 Enrolled / 1 Dropout"
+  const parts = summary.split(/\s*\/\s*/);
+  const translatedParts = parts.map(part => {
+    const match = part.trim().match(/^(\d+)\s+(\w+?)(s)?$/i);
+    if (match && match[2]) {
+      const count = match[1];
+      const word = match[2];
+      let singularWord = word;
+      if (word.toLowerCase() === 'graduates') singularWord = 'Graduate';
+      if (word.toLowerCase() === 'enrolled') singularWord = 'Enrolled';
+      if (word.toLowerCase() === 'dropouts' || word.toLowerCase() === 'dropout') singularWord = 'Dropout';
+      
+      const tWord = t(`outcomes.${singularWord}`) || word;
+      return `${count} ${tWord}`;
+    }
+    return part;
+  });
+  return translatedParts.join(' / ');
+};
+
 const handleViewReport = (id: string) => {
   router.push({ name: 'prediction-result', params: { id } });
 };
@@ -214,7 +246,7 @@ const resetFilters = () => {
                   </span>
                 </td>
                 <td class="py-3.5 px-5 font-bold">{{ session.studentCount }}</td>
-                <td class="py-3.5 px-5 font-medium">{{ session.resultSummary }}</td>
+                <td class="py-3.5 px-5 font-medium">{{ translateResultSummary(session.resultSummary) }}</td>
                 <td class="py-3.5 px-5 text-right">
                   <button 
                     @click="handleActionClick(session)"

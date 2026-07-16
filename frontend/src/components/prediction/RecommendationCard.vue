@@ -80,7 +80,7 @@ const headerTheme = computed(() => {
         </li>
       </ul>
       <p v-else class="text-xs font-medium text-gray-400 dark:text-gray-500 text-center py-2">
-        {{ t('general.loading').startsWith('L') ? 'No specific recommendations provided.' : 'Không có khuyến nghị cụ thể nào được cung cấp.' }}
+        {{ t('result.noRecommendations') }}
       </p>
     </div>
   </div>

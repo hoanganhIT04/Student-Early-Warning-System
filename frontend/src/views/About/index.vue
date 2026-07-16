@@ -1,28 +1,29 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import PageHeader from '../../components/common/PageHeader.vue';
 import Card from 'primevue/card';
 
 const { t } = useI18n();
 
-const techStackFrontend = [
-  { name: 'Vue 3', desc: 'Progressive JavaScript framework for UI components' },
-  { name: 'Pinia', desc: 'Reactive state management pattern and store' },
-  { name: 'Tailwind CSS v4', desc: 'Utility-first CSS framework for modern design aesthetics' },
-  { name: 'PrimeVue v4', desc: 'Rich component library styled with Aura design presets' },
-  { name: 'TypeScript', desc: 'Strong static typings for enterprise codebase consistency' }
-];
+const techStackFrontend = computed(() => [
+  { name: 'Vue 3', desc: t('about.stack.desc.vue') },
+  { name: 'Pinia', desc: t('about.stack.desc.pinia') },
+  { name: 'Tailwind CSS v4', desc: t('about.stack.desc.tailwind') },
+  { name: 'PrimeVue v4', desc: t('about.stack.desc.primevue') },
+  { name: 'TypeScript', desc: t('about.stack.desc.typescript') }
+]);
 
-const techStackBackend = [
-  { name: 'Laravel 11', desc: 'PHP framework for administrative API & role control (Future)' },
-  { name: 'PostgreSQL', desc: 'Relational database for secure history and profile logs (Future)' }
-];
+const techStackBackend = computed(() => [
+  { name: 'Laravel 11', desc: t('about.stack.desc.laravel') },
+  { name: 'PostgreSQL', desc: t('about.stack.desc.postgresql') }
+]);
 
-const techStackAI = [
-  { name: 'FastAPI', desc: 'Python API framework for high-throughput AI predictions' },
-  { name: 'XGBoost / LightGBM', desc: 'Gradient boosted tree algorithms achieving 87%+ PR-AUC' },
-  { name: 'SHAP (Explainable AI)', desc: 'Game-theoretic approach explaining prediction features' }
-];
+const techStackAI = computed(() => [
+  { name: 'FastAPI', desc: t('about.stack.desc.fastapi') },
+  { name: 'XGBoost / LightGBM', desc: t('about.stack.desc.xgb_lgbm') },
+  { name: 'SHAP (Explainable AI)', desc: t('about.stack.desc.shap') }
+]);
 </script>
 
 <template>

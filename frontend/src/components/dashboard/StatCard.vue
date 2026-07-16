@@ -49,8 +49,10 @@ const startCountUp = () => {
     const easeProgress = progress * (2 - progress);
     const currentVal = Math.floor(start + (end - start) * easeProgress);
 
-    if (rawStr.includes(',')) {
-      displayValue.value = currentVal.toLocaleString('en-US');
+    const hasFormatting = rawStr.includes(',') || rawStr.includes('.');
+    if (hasFormatting || typeof props.value === 'number') {
+      const locale = localStorage.getItem('language') === 'vi' ? 'vi-VN' : 'en-US';
+      displayValue.value = currentVal.toLocaleString(locale);
     } else {
       displayValue.value = currentVal;
     }

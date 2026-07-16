@@ -18,12 +18,12 @@ const settingsStore = useSettingsStore();
 const activeTab = ref('appearance');
 
 const tabs = [
-  { id: 'overview', titleVi: 'Tổng Quan', titleEn: 'Overview', descVi: 'Thông tin hệ thống', descEn: 'System specifications', icon: 'fa-solid fa-sliders' },
-  { id: 'appearance', titleVi: 'Giao Diện', titleEn: 'Appearance', descVi: 'Giao diện và hiển thị', descEn: 'Theme and display options', icon: 'fa-solid fa-palette' },
-  { id: 'language', titleVi: 'Ngôn Ngữ', titleEn: 'Language', descVi: 'Ngôn ngữ hiển thị', descEn: 'System active language', icon: 'fa-solid fa-language' },
-  { id: 'notifications', titleVi: 'Thông Báo', titleEn: 'Notifications', descVi: 'Cài đặt thông báo', descEn: 'Advisory email alerts', icon: 'fa-solid fa-bell' },
-  { id: 'system', titleVi: 'Hệ Thống', titleEn: 'System Specs', descVi: 'Cài đặt phần cứng/API', descEn: 'Server API bindings', icon: 'fa-solid fa-microchip' },
-  { id: 'about', titleVi: 'Giới Thiệu', titleEn: 'About Us', descVi: 'Về hệ thống & nhóm', descEn: 'Project credits & team', icon: 'fa-solid fa-circle-info' }
+  { id: 'overview', icon: 'fa-solid fa-sliders' },
+  { id: 'appearance', icon: 'fa-solid fa-palette' },
+  { id: 'language', icon: 'fa-solid fa-language' },
+  { id: 'notifications', icon: 'fa-solid fa-bell' },
+  { id: 'system', icon: 'fa-solid fa-microchip' },
+  { id: 'about', icon: 'fa-solid fa-circle-info' }
 ];
 
 // Mock notification options
@@ -43,10 +43,10 @@ const modelName = ref('XGBoost_UCI_v1.0.bin');
     <div class="flex items-center justify-between">
       <div class="space-y-1">
         <h2 class="text-xl font-bold text-gray-850 dark:text-white tracking-tight leading-tight">
-          {{ settingsStore.language === 'vi' ? 'Cài Đặt' : 'System Settings' }}
+          {{ t('settings.titleLabel') }}
         </h2>
         <p class="text-xs text-gray-400 font-semibold leading-normal">
-          {{ settingsStore.language === 'vi' ? 'Tùy chỉnh giao diện và thiết lập hệ thống theo nhu cầu của bạn' : 'Configure interface preferences, languages, and endpoint parameters.' }}
+          {{ t('settings.descriptionLabel') }}
         </p>
       </div>
 
@@ -81,10 +81,10 @@ const modelName = ref('XGBoost_UCI_v1.0.bin');
             </div>
             <div class="flex-1 min-w-0">
               <span class="block text-xs font-bold leading-tight select-none">
-                {{ settingsStore.language === 'vi' ? tab.titleVi : tab.titleEn }}
+                {{ t('settings.tabs.' + tab.id + '.title') }}
               </span>
-              <span class="block text-[9px] text-gray-400 dark:text-gray-500 font-semibold leading-normal mt-0.5 select-none truncate">
-                {{ settingsStore.language === 'vi' ? tab.descVi : tab.descEn }}
+              <span class="block text-[9px] text-gray-400 dark:text-gray-550 font-semibold leading-normal mt-0.5 select-none truncate">
+                {{ t('settings.tabs.' + tab.id + '.desc') }}
               </span>
             </div>
           </div>
@@ -102,13 +102,13 @@ const modelName = ref('XGBoost_UCI_v1.0.bin');
           <template #title>
             <div class="px-5 pt-4 flex items-center space-x-2 text-xs font-bold text-gray-800 dark:text-gray-200">
               <i class="fa-solid fa-language text-primary-500 text-xs"></i>
-              <span>{{ settingsStore.language === 'vi' ? 'Cấu Hứng Ngôn Ngữ' : 'Language Configuration' }}</span>
+              <span>{{ t('settings.languageConfig') }}</span>
             </div>
           </template>
           <template #content>
             <div class="space-y-4">
               <p class="text-xs text-gray-400 font-semibold leading-normal pb-2">
-                {{ settingsStore.language === 'vi' ? 'Chọn ngôn ngữ hiển thị chính thức của toàn bộ hệ thống.' : 'Select the primary layout display language across administrative elements.' }}
+                {{ t('settings.languageDesc') }}
               </p>
               <LanguageSelector />
             </div>
@@ -123,36 +123,36 @@ const modelName = ref('XGBoost_UCI_v1.0.bin');
           <template #title>
             <div class="px-5 pt-4 flex items-center space-x-2 text-xs font-bold text-gray-800 dark:text-gray-200">
               <i class="fa-solid fa-bell text-primary-500 text-xs"></i>
-              <span>{{ settingsStore.language === 'vi' ? 'Cài Đặt Thông Báo' : 'Notifications Settings' }}</span>
+              <span>{{ t('settings.notificationsTitle') }}</span>
             </div>
           </template>
           <template #content>
             <div class="space-y-4">
               <p class="text-xs text-gray-400 font-semibold leading-normal mb-2">
-                {{ settingsStore.language === 'vi' ? 'Định cấu hình các cảnh báo tự động gửi về Email hoặc Telegram của cố vấn học tập.' : 'Configure custom notifications thresholds and advisor digest schedules.' }}
+                {{ t('settings.notificationsDesc') }}
               </p>
               
               <div class="space-y-4 pt-2">
                 <div class="flex items-center justify-between p-3.5 bg-gray-50/50 dark:bg-gray-800/40 rounded-xl border border-gray-150 dark:border-gray-800">
                   <div class="flex flex-col space-y-0.5">
-                    <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ settingsStore.language === 'vi' ? 'Cảnh báo Email tự động' : 'Automatic Email Warnings' }}</span>
-                    <span class="text-[10px] text-gray-400 font-semibold">{{ settingsStore.language === 'vi' ? 'Gửi mail khi phát hiện sinh viên rủi ro bỏ học rất cao.' : 'Alert advisor instantly when critical risks exceed 90%.' }}</span>
+                    <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ t('settings.emailWarnings') }}</span>
+                    <span class="text-[10px] text-gray-400 font-semibold">{{ t('settings.emailWarningsDesc') }}</span>
                   </div>
                   <ToggleSwitch v-model="emailAlerts" />
                 </div>
 
                 <div class="flex items-center justify-between p-3.5 bg-gray-50/50 dark:bg-gray-800/40 rounded-xl border border-gray-150 dark:border-gray-800">
                   <div class="flex flex-col space-y-0.5">
-                    <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ settingsStore.language === 'vi' ? 'Cảnh báo nợ học phí' : 'Tuition Fees Arrears Alert' }}</span>
-                    <span class="text-[10px] text-gray-400 font-semibold">{{ settingsStore.language === 'vi' ? 'Cảnh báo định kỳ khi nợ học phí của sinh viên kéo dài.' : 'Alert warnings for students with unresolved financial arrears.' }}</span>
+                    <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ t('settings.tuitionAlert') }}</span>
+                    <span class="text-[10px] text-gray-400 font-semibold">{{ t('settings.tuitionAlertDesc') }}</span>
                   </div>
                   <ToggleSwitch v-model="studentArrearsAlerts" />
                 </div>
 
                 <div class="flex items-center justify-between p-3.5 bg-gray-50/50 dark:bg-gray-800/40 rounded-xl border border-gray-150 dark:border-gray-800">
                   <div class="flex flex-col space-y-0.5">
-                    <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ settingsStore.language === 'vi' ? 'Nhận báo cáo hàng tuần' : 'Weekly Status Digest' }}</span>
-                    <span class="text-[10px] text-gray-400 font-semibold">{{ settingsStore.language === 'vi' ? 'Tóm tắt tổng số lượt cảnh báo học vụ mỗi cuối tuần.' : 'Send weekly metrics report to registered email.' }}</span>
+                    <span class="text-xs font-bold text-gray-850 dark:text-gray-200">{{ t('settings.weeklyDigest') }}</span>
+                    <span class="text-[10px] text-gray-400 font-semibold">{{ t('settings.weeklyDigestDesc') }}</span>
                   </div>
                   <ToggleSwitch v-model="weeklyDigests" />
                 </div>
@@ -166,34 +166,34 @@ const modelName = ref('XGBoost_UCI_v1.0.bin');
           <template #title>
             <div class="px-5 pt-4 flex items-center space-x-2 text-xs font-bold text-gray-800 dark:text-gray-200">
               <i class="fa-solid fa-microchip text-primary-500 text-xs"></i>
-              <span>{{ settingsStore.language === 'vi' ? 'Cấu Hình Tích Hợp API / AI' : 'API & System Configurations' }}</span>
+              <span>{{ t('settings.apiTitle') }}</span>
             </div>
           </template>
           <template #content>
             <div class="space-y-5">
               <p class="text-xs text-gray-400 font-semibold leading-normal pb-2">
-                {{ settingsStore.language === 'vi' ? 'Định cấu hình các đường dẫn API Gateway phục vụ tích hợp sau này.' : 'Set up model endpoint URLs and authentication credentials for backend integration.' }}
+                {{ t('settings.apiDesc') }}
               </p>
               
               <div class="space-y-4">
                 <div class="flex flex-col space-y-1.5">
-                  <label class="text-[10px] font-bold text-gray-450 uppercase tracking-wider">{{ settingsStore.language === 'vi' ? 'API Dự đoán (FastAPI AI Server)' : 'AI Prediction Endpoint (FastAPI)' }}</label>
+                  <label class="text-[10px] font-bold text-gray-450 uppercase tracking-wider">{{ t('settings.aiEndpoint') }}</label>
                   <InputText v-model="fastapiEndpoint" class="text-xs w-full bg-gray-50 border-gray-200 font-semibold rounded-lg" />
                 </div>
 
                 <div class="flex flex-col space-y-1.5">
-                  <label class="text-[10px] font-bold text-gray-450 uppercase tracking-wider">{{ settingsStore.language === 'vi' ? 'API Quản trị (Laravel Dashboard Service)' : 'Admin Dashboard Gateway API' }}</label>
+                  <label class="text-[10px] font-bold text-gray-450 uppercase tracking-wider">{{ t('settings.adminEndpoint') }}</label>
                   <InputText v-model="laravelEndpoint" class="text-xs w-full bg-gray-50 border-gray-200 font-semibold rounded-lg" />
                 </div>
 
                 <div class="flex flex-col space-y-1.5">
-                  <label class="text-[10px] font-bold text-gray-450 uppercase tracking-wider">{{ settingsStore.language === 'vi' ? 'Tên Tệp Mô Hình AI Đang Chạy' : 'Active Model Filename' }}</label>
+                  <label class="text-[10px] font-bold text-gray-450 uppercase tracking-wider">{{ t('settings.activeModel') }}</label>
                   <InputText v-model="modelName" class="text-xs w-full bg-gray-50 border-gray-200 font-semibold rounded-lg" />
                 </div>
               </div>
 
               <div class="flex justify-end pt-3">
-                <Button :label="settingsStore.language === 'vi' ? 'Lưu Kết Nối' : 'Save Connection'" class="bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-semibold px-5 py-2 cursor-pointer shadow-md shadow-primary-500/20" />
+                <Button :label="t('settings.saveConnection')" class="bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-semibold px-5 py-2 cursor-pointer shadow-md shadow-primary-500/20" />
               </div>
             </div>
           </template>
@@ -221,7 +221,7 @@ const modelName = ref('XGBoost_UCI_v1.0.bin');
                   <span class="text-gray-800 dark:text-white font-extrabold">{{ t('about.team.sponsorName') }}</span>
                 </div>
                 <div>
-                  <span class="text-gray-400 uppercase text-[9px] tracking-wider block font-bold">{{ settingsStore.language === 'vi' ? 'Cơ Quan Chủ Quản' : 'Institution' }}</span>
+                  <span class="text-gray-400 uppercase text-[9px] tracking-wider block font-bold">{{ t('settings.institution') }}</span>
                   <span class="text-gray-800 dark:text-white font-extrabold">{{ t('about.team.initiative') }}</span>
                 </div>
               </div>

@@ -16,15 +16,13 @@ watch(() => route.path, () => {
 
 const menuGroups = [
   {
-    titleEn: 'OVERVIEW',
-    titleVi: 'TỔNG QUAN',
+    groupKey: 'sidebar.groups.overview',
     items: [
       { labelKey: 'sidebar.dashboard', path: ROUTES.DASHBOARD, icon: 'fa-solid fa-chart-line' }
     ]
   },
   {
-    titleEn: 'PREDICTIONS',
-    titleVi: 'DỰ ĐOÁN',
+    groupKey: 'sidebar.groups.predictions',
     items: [
       { labelKey: 'sidebar.singlePrediction', path: ROUTES.SINGLE_PREDICTION, icon: 'fa-solid fa-user-graduate' },
       { labelKey: 'sidebar.batchPrediction', path: ROUTES.BATCH_PREDICTION, icon: 'fa-solid fa-file-import' },
@@ -32,15 +30,13 @@ const menuGroups = [
     ]
   },
   {
-    titleEn: 'INFORMATION',
-    titleVi: 'THÔNG TIN',
+    groupKey: 'sidebar.groups.information',
     items: [
       { labelKey: 'sidebar.about', path: ROUTES.ABOUT, icon: 'fa-solid fa-circle-info' }
     ]
   },
   {
-    titleEn: 'SYSTEM',
-    titleVi: 'HỆ THỐNG',
+    groupKey: 'sidebar.groups.system',
     items: [
       { labelKey: 'sidebar.settings', path: ROUTES.SETTINGS, icon: 'fa-solid fa-gear' }
     ]
@@ -74,10 +70,10 @@ const menuGroups = [
 
     <!-- Menu Categories Links -->
     <nav class="flex-1 px-4 py-6 space-y-5 overflow-y-auto">
-      <div v-for="group in menuGroups" :key="group.titleEn" class="space-y-1.5">
+      <div v-for="group in menuGroups" :key="group.groupKey" class="space-y-1.5">
         <!-- Group Header Title -->
         <span class="block px-4 text-[9px] font-extrabold text-gray-400 dark:text-gray-550 uppercase tracking-widest leading-none mb-2">
-          {{ settingsStore.language === 'vi' ? group.titleVi : group.titleEn }}
+          {{ t(group.groupKey) }}
         </span>
 
         <!-- Group Items -->
@@ -122,10 +118,10 @@ const menuGroups = [
         <span class="flex-shrink-0 w-2 h-2 rounded-full bg-emerald-500 mt-1 shadow-sm shadow-emerald-400/55 animate-pulse"></span>
         <div class="flex-1 min-w-0">
           <h6 class="text-[11px] font-bold text-gray-700 dark:text-gray-300 leading-tight">
-            {{ settingsStore.language === 'vi' ? 'Chế độ Giả Lập' : 'Mock Mode Active' }}
+            {{ t('sidebar.mockModeActive') }}
           </h6>
           <p class="text-[9px] text-gray-400 font-semibold leading-normal mt-0.5">
-            {{ settingsStore.language === 'vi' ? 'Hệ thống đang hoạt động bình thường' : 'Warning models are simulating cleanly' }}
+            {{ t('sidebar.simulatingCleanly') }}
           </p>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import { useMotion } from '../../composables/useMotion';
 import { useSettingsStore } from '../../stores/settings.store';
+import { useI18n } from 'vue-i18n';
 
 Chart.register(...registerables);
 
@@ -78,34 +79,20 @@ const getThemeColors = (theme: string, dark: boolean) => {
   }
 };
 
+const { t, te } = useI18n();
+
 const translateLabel = (label: string) => {
-  if (settingsStore.language === 'vi') {
-    switch (label) {
-      case 'Graduate': return 'Tốt nghiệp';
-      case 'Dropout': return 'Thôi học';
-      case 'Enrolled': return 'Đang học';
-      case 'Jan': return 'T1';
-      case 'Feb': return 'T2';
-      case 'Mar': return 'T3';
-      case 'Apr': return 'T4';
-      case 'May': return 'T5';
-      case 'Jun': return 'T6';
-      case 'Jul': return 'T7';
-      case 'Aug': return 'T8';
-      case 'Sep': return 'T9';
-      case 'Oct': return 'T10';
-      case 'Nov': return 'T11';
-      case 'Dec': return 'T12';
-      default: return label;
-    }
-  } else {
-    switch (label) {
-      case 'Graduate': return 'Graduate';
-      case 'Dropout': return 'Dropout';
-      case 'Enrolled': return 'Enrolled';
-      default: return label;
-    }
+  if (te('outcomes.' + label)) {
+    return t('outcomes.' + label);
   }
+  const monthMap: Record<string, string> = {
+    'Jan': '1', 'Feb': '2', 'Mar': '3', 'Apr': '4', 'May': '5', 'Jun': '6',
+    'Jul': '7', 'Aug': '8', 'Sep': '9', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+  };
+  if (monthMap[label] !== undefined) {
+    return localStorage.getItem('language') === 'vi' ? 'T' + monthMap[label] : label;
+  }
+  return te('general.' + label) ? t('general.' + label) : label;
 };
 
 const createChart = () => {
@@ -154,7 +141,7 @@ const createChart = () => {
     data: {
       labels,
       datasets: [{
-        label: 'Students',
+        label: t('general.students'),
         data: values,
         backgroundColor,
         hoverBackgroundColor,
@@ -198,7 +185,7 @@ const createChart = () => {
             label: (context) => {
               const val = context.parsed as number;
               const pct = totalCount.value > 0 ? ((val / totalCount.value) * 100).toFixed(1) : '0';
-              const studentLabel = settingsStore.language === 'vi' ? 'sinh viên' : 'students';
+              const studentLabel = t('general.students');
               return props.type === 'pie'
                 ? `  ${val} ${studentLabel} (${pct}%)`
                 : `  ${val} ${studentLabel}`;
@@ -319,11 +306,15 @@ watch(() => settingsStore.themeColor, () => {
 watch(() => settingsStore.language, () => {
   if (chartInstance) {
     chartInstance.data.labels = props.data.map((d) => translateLabel(d.label));
+    const ds = chartInstance.data.datasets[0];
+    if (ds) {
+      ds.label = t('general.students');
+    }
     if (chartInstance.options.plugins?.tooltip?.callbacks) {
       chartInstance.options.plugins.tooltip.callbacks.label = (context) => {
         const val = context.parsed as number;
         const pct = totalCount.value > 0 ? ((val / totalCount.value) * 100).toFixed(1) : '0';
-        const studentLabel = settingsStore.language === 'vi' ? 'sinh viên' : 'students';
+        const studentLabel = t('general.students');
         return props.type === 'pie'
           ? `  ${val} ${studentLabel} (${pct}%)`
           : `  ${val} ${studentLabel}`;
@@ -361,8 +352,8 @@ onMounted(() => {
         <p v-if="subtitle" class="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
           {{ subtitle }}
         </p>
-        <p v-else-if="type === 'pie'" class="text-[10px] font-semibold text-gray-400 dark:text-gray-500">
-          {{ settingsStore.language === 'vi' ? `Tổng cộng ${totalCount} sinh viên` : `${totalCount} students total` }}
+        <p v-else-if="type === 'pie'" class="text-[10px] font-semibold text-gray-400 dark:text-gray-550">
+          {{ t('general.totalCountStudents', { count: totalCount }) }}
         </p>
       </div>
       <div class="w-7 h-7 rounded-lg bg-primary-50 dark:bg-primary-950/20 flex items-center justify-center">
@@ -380,9 +371,9 @@ onMounted(() => {
         class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
         style="padding-bottom: 2.5rem"
       >
-        <span class="text-2xl font-black text-gray-800 dark:text-white leading-none">{{ totalCount }}</span>
-        <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 mt-0.5 uppercase tracking-wide">
-          {{ settingsStore.language === 'vi' ? 'Tổng số' : 'Total' }}
+        <span class="text-2xl font-black text-gray-880 dark:text-white leading-none">{{ totalCount }}</span>
+        <span class="text-[10px] font-bold text-gray-400 dark:text-gray-550 mt-0.5 uppercase tracking-wide">
+          {{ t('general.total') }}
         </span>
       </div>
     </div>
