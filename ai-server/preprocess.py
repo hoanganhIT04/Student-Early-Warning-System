@@ -17,7 +17,7 @@ def load_and_preprocess_data(csv_path, output_dir):
     # Chuẩn hóa tên cột (loại bỏ khoảng trắng thừa hoặc ký tự tab ẩn ở cuối cột)
     df.columns = df.columns.str.strip()
     
-    # Xử lý đồng bộ cột Nacionality/Nationality
+    # Xử lý đồng bộ cột Nacionality/Nationality .
     if 'Nacionality' in df.columns:
         df = df.rename(columns={'Nacionality': 'Nationality'})
         print("Đã phát hiện và đổi tên cột 'Nacionality' thành 'Nationality'")
