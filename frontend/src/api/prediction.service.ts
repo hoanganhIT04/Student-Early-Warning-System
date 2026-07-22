@@ -1,8 +1,5 @@
-import type { StudentPredictionInput, StudentDisplayInfo, StudentAIFeatures } from '../types/student';
-import type { PredictionResult, StudentPredictionResult } from '../types/prediction';
-import recommendationsDb from '../mocks/recommendations.json';
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import type { StudentPredictionInput } from '../types/student';
+import type { StudentPredictionResult } from '../types/prediction';
 
 export const predictionService = {
   /**
@@ -27,7 +24,6 @@ export const predictionService = {
     const result = await response.json();
     console.log('Received response from Python FastAPI:', result);
     return result;
-<<<<<<< HEAD
   },
 
   /**
@@ -52,7 +48,5 @@ export const predictionService = {
     const results = await response.json();
     console.log('Received batch response from Python FastAPI:', results);
     return results;
-=======
->>>>>>> 4c1a31354928868246341aefb867bd375b5cf0f6
   }
 };
