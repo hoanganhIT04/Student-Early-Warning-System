@@ -6,39 +6,47 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const historyService = {
   /**
-   * Retrieves all historical prediction sessions.
+   * Retrieves all historical prediction sessions from the FastAPI server.
    */
   async getHistory(): Promise<PredictionHistoryItem[]> {
-    await delay(500); // Simulate API latency
-    
-    // Cast and return copy of the mock DB
-    return JSON.parse(JSON.stringify(historyMock)) as PredictionHistoryItem[];
+    console.log('Fetching prediction history from FastAPI...');
+    const response = await fetch('http://127.0.0.1:8080/history');
+    if (!response.ok) {
+      throw new Error('Không thể tải lịch sử dự đoán từ máy chủ.');
+    }
+    return await response.json();
   },
 
   /**
-   * Retrieves a specific single student prediction result across all historical sessions.
-   * Used to review specific predictions.
+   * Retrieves a specific single student prediction result by ID from the FastAPI server.
    */
   async getPredictionResultById(id: string): Promise<StudentPredictionResult | null> {
-    await delay(300);
-    
-    for (const session of historyMock) {
-      const result = session.details.find((d) => d.id === id);
-      if (result) {
-        return JSON.parse(JSON.stringify(result)) as StudentPredictionResult;
-      }
+    console.log(`Fetching prediction result details for ID ${id} from FastAPI...`);
+    const response = await fetch(`http://127.0.0.1:8080/history/${id}`);
+    if (response.status === 404) {
+      return null;
     }
-    
-    return null;
+    if (!response.ok) {
+      throw new Error('Không thể tải thông tin kết quả chi tiết.');
+    }
+    return await response.json();
   },
 
   /**
-   * Simulates saving a new prediction session to the database.
+   * Saves a new prediction session to the FastAPI server.
    */
   async savePredictionSession(session: PredictionHistoryItem): Promise<PredictionHistoryItem> {
-    await delay(400);
-    // In production, this would make a POST request to persist the record.
-    console.log('API Request - Session saved to DB:', session);
-    return session;
+    console.log('Saving prediction session to FastAPI:', session);
+    const response = await fetch('http://127.0.0.1:8080/history', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(session)
+    });
+    if (!response.ok) {
+      throw new Error('Không thể lưu phiên dự đoán lên máy chủ.');
+    }
+    return await response.json();
   }
 };

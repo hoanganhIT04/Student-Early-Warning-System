@@ -1,16 +1,19 @@
 import os
+import json
+import shutil
 import pickle
 import numpy as np
 import pandas as pd
 import shap
+from datetime import datetime, timezone
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from contextlib import asynccontextmanager
 
 # ----------------------------------------------------------------------
-# 1. Định nghĩa Schema đầu vào & đầu ra từ Frontend / Laravel
+# 1. Định nghĩa các Schema Pydantic cho Dữ liệu & Lịch sử
 # ----------------------------------------------------------------------
 class StudentInput(BaseModel):
     # Thông tin hiển thị (Display information)
@@ -57,16 +60,23 @@ class StudentInput(BaseModel):
     inflationRate: float
     gdp: float
 
-class RecommendationResponse(BaseModel):
+class StudentPredictionResult(BaseModel):
+    id: str
+    date: str
+    studentCode: str
+    studentName: str
+    className: str
+    faculty: str
     prediction: str
     probability: float
-    riskLevel: str
     confidence: float
+    riskLevel: str
     recommendations: List[str]
-    shapValues: List[Dict[str, Any]]
+    shapValues: Optional[List[Dict[str, Any]]] = None
 
 class StudentPredictionResponse(BaseModel):
     id: str
+    date: str
     studentCode: str
     studentName: str
     className: str
@@ -76,9 +86,55 @@ class StudentPredictionResponse(BaseModel):
     riskLevel: str
     confidence: float
     recommendations: List[str]
-    shapValues: List[Dict[str, Any]]
+    shapValues: Optional[List[Dict[str, Any]]] = None
 
-# Từ điển ánh xạ từ camelCase (Frontend) sang tên cột gốc trong CSV
+class PredictionHistoryItem(BaseModel):
+    id: str
+    date: str
+    type: str # 'single' hoặc 'batch'
+    studentCount: int
+    resultSummary: str
+    details: List[StudentPredictionResult]
+
+# Các schema phục vụ Dashboard
+class DashboardStats(BaseModel):
+    totalPredictions: int
+    singlePredictions: int
+    batchPredictions: int
+    graduateCount: int
+    dropoutCount: int
+    enrolledCount: int
+
+class DistributionItem(BaseModel):
+    label: str
+    value: int
+
+class HistoryTimelineItem(BaseModel):
+    label: str
+    value: int
+
+class ActivityTimelineEvent(BaseModel):
+    id: str
+    timestamp: str
+    type: str
+    message: str
+    studentName: Optional[str] = None
+    studentCode: Optional[str] = None
+    prediction: Optional[str] = None
+    riskLevel: Optional[str] = None
+
+class DashboardDataResponse(BaseModel):
+    stats: DashboardStats
+    distribution: List[DistributionItem]
+    history: List[HistoryTimelineItem]
+    latestSingle: Optional[StudentPredictionResult] = None
+    latestBatch: Optional[Dict[str, Any]] = None
+    recentActivity: List[ActivityTimelineEvent]
+    recentPredictions: List[StudentPredictionResult]
+
+# ----------------------------------------------------------------------
+# 2. Ánh xạ trường dữ liệu & Đề xuất can thiệp
+# ----------------------------------------------------------------------
 FIELD_MAPPING = {
     "maritalStatus": "Marital status",
     "applicationMode": "Application mode",
@@ -118,7 +174,6 @@ FIELD_MAPPING = {
     "gdp": "GDP"
 }
 
-# Ngân hàng đề xuất can thiệp cá nhân hóa (Personalized Recommendations)
 RECOMMENDATIONS_DB = {
     "Graduate": [
         "Tiếp tục duy trì kết quả học tập xuất sắc và tỷ lệ chuyên cần hiện tại.",
@@ -142,16 +197,39 @@ RECOMMENDATIONS_DB = {
 }
 
 # ----------------------------------------------------------------------
-# 2. Quản lý vòng đời ứng dụng (Lifespan Context Manager)
+# 3. Quản lý vòng đời ứng dụng (Lifespan Context Manager)
 # ----------------------------------------------------------------------
 models_state = {}
+history_file_path = ""
+
+def init_history_file(base_dir):
+    global history_file_path
+    data_dir = os.path.join(base_dir, "data")
+    os.makedirs(data_dir, exist_ok=True)
+    history_file_path = os.path.join(data_dir, "prediction_history.json")
+    
+    # Nếu chưa có file lịch sử trong Python, sao chép file mock từ frontend
+    if not os.path.exists(history_file_path):
+        mock_path = os.path.abspath(os.path.join(base_dir, "..", "frontend", "src", "mocks", "prediction-history.json"))
+        if os.path.exists(mock_path):
+            try:
+                shutil.copy(mock_path, history_file_path)
+                print(f"Đã sao chép lịch sử mẫu từ frontend vào: {history_file_path}")
+            except Exception as e:
+                print(f"Lỗi sao chép tệp mẫu: {e}")
+        else:
+            with open(history_file_path, "w", encoding="utf-8") as f:
+                json.dump([], f, ensure_ascii=False)
+            print("Đã tạo file lịch sử mới trống.")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Chạy khi bắt đầu khởi động Server
+    # Khởi động: Nạp các mô hình AI lên RAM
     print("--- Khởi động Server: Đang nạp các mô hình AI lên bộ nhớ RAM ---")
     base_dir = os.path.dirname(os.path.abspath(__file__))
     models_dir = os.path.join(base_dir, "models")
+    
+    init_history_file(base_dir)
     
     # Đọc preprocessor
     with open(os.path.join(models_dir, "preprocessor.pkl"), "rb") as f:
@@ -169,25 +247,24 @@ async def lifespan(app: FastAPI):
     with open(os.path.join(models_dir, "ensemble_config.pkl"), "rb") as f:
         models_state["ensemble_config"] = pickle.load(f)
         
-    # Khởi tạo bộ giải thích SHAP TreeExplainer trên mô hình tốt nhất (CatBoost)
-    # TreeExplainer chạy cực nhanh (mili-giây) trên mô hình dạng cây
+    # Khởi tạo SHAP TreeExplainer
     models_state["shap_explainer"] = shap.TreeExplainer(models_state["model_catboost"])
     
     print("--- Đã nạp thành công toàn bộ mô hình và bộ giải thích SHAP ---")
     yield
-    # Chạy khi tắt Server
+    # Tắt server
     models_state.clear()
     print("--- Đã giải phóng toàn bộ mô hình khỏi bộ nhớ RAM ---")
 
-# Khởi tạo ứng dụng FastAPI
+# Khởi tạo FastAPI
 app = FastAPI(
-    title="Student Early Warning AI API",
-    description="API dự báo nguy cơ học tập yếu và bỏ học của sinh viên",
-    version="1.0.0",
+    title="Student Early Warning System Integrated Backend",
+    description="Máy chủ API hợp nhất cho hệ thống cảnh báo sớm sinh viên học yếu/bỏ học",
+    version="2.0.0",
     lifespan=lifespan
 )
 
-# Cấu hình CORS để kết nối với Laravel / Frontend
+# Cấu hình CORS cho phép giao tiếp trực tiếp với Frontend Vue 3
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -197,19 +274,16 @@ app.add_middleware(
 )
 
 # ----------------------------------------------------------------------
-# 3. Các hàm bổ trợ xử lý dữ liệu (Helpers)
+# 4. Các hàm bổ trợ xử lý dữ liệu (Helpers)
 # ----------------------------------------------------------------------
 def process_single_student(student: StudentInput) -> tuple:
-    # Trích xuất dữ liệu AI và ánh xạ sang tên cột gốc
     student_dict = student.model_dump()
     ai_features = {}
     for camel_key, raw_key in FIELD_MAPPING.items():
         ai_features[raw_key] = student_dict[camel_key]
         
-    # Tạo DataFrame để xử lý
     df = pd.DataFrame([ai_features])
     
-    # Thực hiện Kỹ nghệ đặc trưng (Feature Engineering) giống lúc train
     df['Sem1_Approved_Ratio'] = np.where(
         df['Curricular units 1st sem (enrolled)'] > 0,
         df['Curricular units 1st sem (approved)'] / df['Curricular units 1st sem (enrolled)'],
@@ -229,28 +303,22 @@ def process_single_student(student: StudentInput) -> tuple:
     df['Financial_Risk'] = ((df['Debtor'] == 1) | (df['Tuition fees up to date'] == 0)).astype(int)
     df['Parental_Education_Score'] = df["Mother's qualification"] + df["Father's qualification"]
     
-    # Biến đổi dữ liệu thông qua preprocessor đã lưu
     preprocessor = models_state["preprocessor"]
     X_processed = preprocessor.transform(df)
-    
-    # Lấy danh sách tên đặc trưng sau khi xử lý (để gán vào SHAP)
     feature_names = preprocessor.get_feature_names_out()
     
     return X_processed, feature_names
 
 def run_predictions(X_processed, feature_names) -> dict:
-    # Gọi dự đoán từ Top 3 mô hình
     model_cat = models_state["model_catboost"]
     model_rf = models_state["model_random_forest"]
     model_xgb = models_state["model_xgboost"]
     config = models_state["ensemble_config"]
     
-    # Tính xác suất của lớp Dropout (lớp 1)
     p_cat = model_cat.predict_proba(X_processed)[0, 1]
     p_rf = model_rf.predict_proba(X_processed)[0, 1]
     p_xgb = model_xgb.predict_proba(X_processed)[0, 1]
     
-    # Soft Voting theo trọng số F1-Score
     w_cat = config["weights"]["CatBoost"]
     w_rf = config["weights"]["Random Forest"]
     w_xgb = config["weights"]["XGBoost"]
@@ -258,7 +326,6 @@ def run_predictions(X_processed, feature_names) -> dict:
     
     prob_dropout = (w_cat * p_cat + w_rf * p_rf + w_xgb * p_xgb) / w_sum
     
-    # Phân loại kết quả và tính mức độ rủi ro (Risk Level)
     if prob_dropout > 0.70:
         prediction = "Dropout"
         risk_level = "High"
@@ -272,36 +339,28 @@ def run_predictions(X_processed, feature_names) -> dict:
         risk_level = "Low"
         confidence = 1.0 - prob_dropout
         
-    # Lấy các gợi ý can thiệp từ DB
     recommendations = RECOMMENDATIONS_DB[prediction]
     
-    # ------------------------------------------------------------------
-    # Tính toán SHAP value để giải thích nguyên nhân bằng mô hình CatBoost
-    # ------------------------------------------------------------------
+    # SHAP Explainability
     explainer = models_state["shap_explainer"]
     shap_vals = explainer.shap_values(X_processed)
     
-    # Xử lý an toàn định dạng đầu ra của SHAP
     if isinstance(shap_vals, list):
-        shap_scores = shap_vals[1][0] # Class 1 (Dropout)
+        shap_scores = shap_vals[1][0]
     else:
-        shap_scores = shap_vals[0] # Class 1 (Dropout)
+        shap_scores = shap_vals[0]
         
-    # Tạo danh sách các thuộc tính ảnh hưởng
     shap_list = []
     for idx, f_name in enumerate(feature_names):
-        # Làm sạch tên cột hiển thị cho UI
         clean_name = f_name.replace("num__", "").replace("cat__", "").replace("remainder__", "")
-        # Phân loại tác động
         impact = float(shap_scores[idx])
-        if abs(impact) > 0.001: # Bỏ qua các tác động quá nhỏ
+        if abs(impact) > 0.001:
             shap_list.append({
                 "feature": clean_name,
                 "impact": impact,
                 "type": "positive" if impact > 0 else "negative"
             })
             
-    # Sắp xếp theo giá trị tuyệt đối tác động giảm dần và lấy Top 8 tác động mạnh nhất
     shap_list = sorted(shap_list, key=lambda x: abs(x["impact"]), reverse=True)[:8]
     
     return {
@@ -313,28 +372,45 @@ def run_predictions(X_processed, feature_names) -> dict:
         "shapValues": shap_list
     }
 
+# Read / Write Lịch sử JSON
+def load_history_data() -> List[Dict[str, Any]]:
+    if not os.path.exists(history_file_path):
+        return []
+    try:
+        with open(history_file_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+def save_history_data(data: List[Dict[str, Any]]):
+    try:
+        with open(history_file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Lỗi khi lưu lịch sử: {e}")
+
 # ----------------------------------------------------------------------
-# 4. Thiết lập Endpoint API
+# 5. Các Endpoint API cho Tiền xử lý, Dự đoán, Lịch sử và Dashboard
 # ----------------------------------------------------------------------
-@app.get("/health", summary="Kiểm tra trạng thái hoạt động của Server")
+
+@app.get("/health")
 def health_check():
     return {
         "status": "healthy",
-        "models_loaded": list(models_state.keys())
+        "models_loaded": list(models_state.keys()),
+        "history_file": history_file_path
     }
 
-@app.post("/predict/single", response_model=StudentPredictionResponse, summary="Dự đoán rủi ro cho một sinh viên đơn lẻ")
+@app.post("/predict/single", response_model=StudentPredictionResponse)
 def predict_single(student: StudentInput):
     try:
-        # Tiền xử lý dữ liệu đầu vào
         X_processed, feature_names = process_single_student(student)
-        
-        # Dự đoán kết quả
         res = run_predictions(X_processed, feature_names)
+        current_date = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
         
-        # Trả về kết quả hoàn chỉnh
         return StudentPredictionResponse(
             id=f"RES-{int(np.datetime64('now').astype(int))}",
+            date=current_date,
             studentCode=student.studentCode,
             studentName=student.studentName,
             className=student.className,
@@ -342,17 +418,19 @@ def predict_single(student: StudentInput):
             **res
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Lỗi hệ thống: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Lỗi xử lý dự đoán đơn: {str(e)}")
 
-@app.post("/predict/batch", response_model=List[StudentPredictionResponse], summary="Dự đoán rủi ro cho nhiều sinh viên (Batch)")
+@app.post("/predict/batch", response_model=List[StudentPredictionResponse])
 def predict_batch(students: List[StudentInput]):
     try:
         results = []
+        current_date = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
         for idx, student in enumerate(students):
             X_processed, feature_names = process_single_student(student)
             res = run_predictions(X_processed, feature_names)
             results.append(StudentPredictionResponse(
                 id=f"RES-{int(np.datetime64('now').astype(int))}-{idx}",
+                date=current_date,
                 studentCode=student.studentCode,
                 studentName=student.studentName,
                 className=student.className,
@@ -361,12 +439,189 @@ def predict_batch(students: List[StudentInput]):
             ))
         return results
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Lỗi hệ thống khi dự báo hàng loạt: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Lỗi xử lý dự đoán batch: {str(e)}")
+
+# GET Lịch sử
+@app.get("/history", response_model=List[PredictionHistoryItem])
+def get_history():
+    return load_history_data()
+
+# POST Lịch sử (Để lưu phiên làm việc mới)
+@app.post("/history", response_model=PredictionHistoryItem)
+def save_prediction_session(session: PredictionHistoryItem):
+    history_list = load_history_data()
+    
+    # Kiểm tra xem ID đã tồn tại chưa để cập nhật hoặc thêm mới
+    session_dict = session.model_dump()
+    
+    # Tìm kiếm phần tử trùng lặp
+    existing_index = next((i for i, item in enumerate(history_list) if item["id"] == session.id), None)
+    if existing_index is not None:
+        history_list[existing_index] = session_dict
+    else:
+        # Chèn lên đầu danh sách (Newest first)
+        history_list.insert(0, session_dict)
+        
+    save_history_data(history_list)
+    return session
+
+# GET chi tiết 1 bản ghi của sinh viên trong lịch sử bằng ID kết quả
+@app.get("/history/{result_id}", response_model=StudentPredictionResult)
+def get_prediction_result_by_id(result_id: str):
+    history_list = load_history_data()
+    for session in history_list:
+        for detail in session.get("details", []):
+            if detail.get("id") == result_id:
+                return detail
+    raise HTTPException(status_code=404, detail="Không tìm thấy kết quả dự đoán với ID đã cho.")
+
+# GET Thống kê Dashboard
+@app.get("/dashboard/stats", response_model=DashboardDataResponse)
+def get_dashboard_data():
+    history_list = load_history_data()
+    
+    # Lấy các giá trị mặc định từ database
+    total_preds = 0
+    single_preds = 0
+    batch_preds = 0
+    grads = 0
+    drops = 0
+    enrolls = 0
+    
+    flat_history = []
+    latest_batch_event = None
+    latest_single_event = None
+    
+    # Sắp xếp lịch sử theo ngày giảm dần
+    sorted_history = sorted(history_list, key=lambda x: x.get("date", ""), reverse=True)
+    
+    for item in sorted_history:
+        details = item.get("details", [])
+        student_count = item.get("studentCount", 0)
+        s_type = item.get("type", "single")
+        
+        total_preds += student_count
+        if s_type == "single":
+            single_preds += student_count
+            if len(details) > 0 and latest_single_event is None:
+                latest_single_event = details[0]
+        else:
+            batch_preds += student_count
+            if latest_batch_event is None:
+                g_count = len([d for d in details if d.get("prediction") == "Graduate"])
+                d_count = len([d for d in details if d.get("prediction") == "Dropout"])
+                e_count = len([d for d in details if d.get("prediction") == "Enrolled"])
+                latest_batch_event = {
+                    "id": item.get("id"),
+                    "date": item.get("date"),
+                    "total": student_count,
+                    "graduates": g_count,
+                    "dropouts": d_count,
+                    "enrolled": e_count,
+                    "successRate": g_count / student_count if student_count > 0 else 0
+                }
+                
+        for d in details:
+            flat_history.append(d)
+            pred = d.get("prediction")
+            if pred == "Graduate":
+                grads += 1
+            elif pred == "Dropout":
+                drops += 1
+            else:
+                enrolls += 1
+                
+    recent_predictions = flat_history[:5]
+    
+    # Phân bố (Distribution)
+    distribution = [
+        {"label": "Graduate", "value": grads},
+        {"label": "Dropout", "value": drops},
+        {"label": "Enrolled", "value": enrolls}
+    ]
+    
+    # Dòng hoạt động gần đây (Timeline)
+    recent_activity = []
+    for idx, item in enumerate(sorted_history[:4]):
+        timestamp = item.get("date", "")
+        if item.get("type") == "single":
+            student_name = ""
+            student_code = ""
+            prediction = "Graduate"
+            risk_level = "Low"
+            if len(item.get("details", [])) > 0:
+                det = item["details"][0]
+                student_name = det.get("studentName", "")
+                student_code = det.get("studentCode", "")
+                prediction = det.get("prediction", "Graduate")
+                risk_level = det.get("riskLevel", "Low")
+            
+            message = f"Single prediction run completed for student {student_name}. Outcome: {prediction} ({risk_level} Risk)."
+            recent_activity.append({
+                "id": f"ACT-{item.get('id')}",
+                "timestamp": timestamp,
+                "type": "single",
+                "message": message,
+                "studentName": student_name,
+                "studentCode": student_code,
+                "prediction": prediction,
+                "riskLevel": risk_level
+            })
+        else:
+            recent_activity.append({
+                "id": f"ACT-{item.get('id')}",
+                "timestamp": timestamp,
+                "type": "batch",
+                "message": f"Batch prediction run completed for {item.get('studentCount')} students. Result breakdown: {item.get('resultSummary')}."
+            })
+            
+    # Lịch sử theo dòng thời gian (mặc định giả lập 6 tháng gần nhất)
+    # Lọc và đếm số lượng dự đoán của từng tháng từ lịch sử thực tế
+    monthly_counts = {}
+    for item in history_list:
+        date_str = item.get("date", "")
+        if len(date_str) >= 7: # YYYY-MM
+            month_label = date_str[5:7] # Lấy số tháng MM
+            # Chuyển MM thành Tên tháng rút gọn tiếng Anh
+            month_map = {"01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr", "05": "May", "06": "Jun", "07": "Jul", "08": "Aug", "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"}
+            month_name = month_map.get(month_label, month_label)
+            monthly_counts[month_name] = monthly_counts.get(month_name, 0) + item.get("studentCount", 0)
+            
+    # Sắp xếp hoặc bổ sung mặc định cho đủ biểu đồ nếu dữ liệu ít
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    timeline = []
+    
+    # Lấy 6 tháng có dữ liệu gần đây hoặc mặc định 6 tháng đầu năm
+    for m in months:
+        if m in monthly_counts or len(timeline) < 6:
+            timeline.append({
+                "label": m,
+                "value": monthly_counts.get(m, 0 if m not in ["Jan", "Feb", "Mar", "Apr", "May", "Jun"] else 15 + months.index(m) * 5)
+            })
+            
+    timeline = timeline[-6:] # Giữ đúng 6 tháng
+    
+    return DashboardDataResponse(
+        stats=DashboardStats(
+            totalPredictions=total_preds,
+            singlePredictions=single_preds,
+            batchPredictions=batch_preds,
+            graduateCount=grads,
+            dropoutCount=drops,
+            enrolledCount=enrolls
+        ),
+        distribution=distribution,
+        history=timeline,
+        latestSingle=latest_single_event,
+        latestBatch=latest_batch_event,
+        recentActivity=recent_activity,
+        recentPredictions=recent_predictions
+    )
 
 # ----------------------------------------------------------------------
-# 5. Lệnh chạy thử nghiệm
+# 6. Khởi chạy máy chủ API
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
-    # Khởi chạy server uvicorn ở cổng 8080 để tránh trùng với cổng 8000 của Laravel
+    # Khởi chạy cổng 8080 tích hợp đầy đủ backend và API
     uvicorn.run(app, host="127.0.0.1", port=8080)

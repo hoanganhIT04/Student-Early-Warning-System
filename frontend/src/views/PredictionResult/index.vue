@@ -6,6 +6,7 @@ import PageHeader from '../../components/common/PageHeader.vue';
 import RiskBadge from '../../components/prediction/RiskBadge.vue';
 import RecommendationCard from '../../components/prediction/RecommendationCard.vue';
 import InputSummaryCard from '../../components/prediction/InputSummaryCard.vue';
+import ShapCard from '../../components/prediction/ShapCard.vue';
 import { formatPercent } from '../../utils/formatter';
 import { formatDate } from '../../utils/date';
 import type { StudentPredictionInput } from '../../types/student';
@@ -198,6 +199,9 @@ const handlePrint = () => {
         :recommendations="record.recommendations" 
         :prediction="record.prediction" 
       />
+
+      <!-- 2.5 AI Explainability (SHAP) -->
+      <ShapCard :shap-values="record.shapValues" />
 
       <!-- 3. Collapsible summary card -->
       <div v-if="studentInputMockData" class="space-y-2">

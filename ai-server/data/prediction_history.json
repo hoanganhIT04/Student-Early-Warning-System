@@ -1,0 +1,71 @@
+[
+  {
+    "id": "PR-1784726052227",
+    "date": "2026-07-22T13:14:12.223444Z",
+    "type": "single",
+    "studentCount": 1,
+    "resultSummary": "1 Graduate (Low Risk)",
+    "details": [
+      {
+        "id": "RES-1784726052",
+        "date": "2026-07-22T13:14:12.223444Z",
+        "studentCode": "2255010110",
+        "studentName": "Bình Minh",
+        "className": "22CN5",
+        "faculty": "Công nghệ thông tin",
+        "prediction": "Graduate",
+        "probability": 0.2764846476476328,
+        "confidence": 0.7235153523523672,
+        "riskLevel": "Low",
+        "recommendations": [
+          "Tiếp tục duy trì kết quả học tập xuất sắc và tỷ lệ chuyên cần hiện tại.",
+          "Xem xét đăng ký làm gia sư hoặc người hướng dẫn học tập (Peer Mentor) cho khóa dưới.",
+          "Tham gia các hoạt động nghiên cứu khoa học sinh viên hoặc đồ án danh dự.",
+          "Tham gia các chương trình tư vấn hướng nghiệp và ngày hội thực tập của khoa."
+        ],
+        "shapValues": [
+          {
+            "feature": "Course_9119",
+            "impact": 0.7082976891385903,
+            "type": "positive"
+          },
+          {
+            "feature": "Sem2_Approved_Ratio",
+            "impact": -0.6145212608996956,
+            "type": "negative"
+          },
+          {
+            "feature": "Curricular units 2nd sem (approved)",
+            "impact": -0.4069099855794868,
+            "type": "negative"
+          },
+          {
+            "feature": "Mother's qualification_4",
+            "impact": -0.35977123057536364,
+            "type": "negative"
+          },
+          {
+            "feature": "Sem1_Approved_Ratio",
+            "impact": -0.2880955415089572,
+            "type": "negative"
+          },
+          {
+            "feature": "Tuition fees up to date",
+            "impact": -0.2586638880780363,
+            "type": "negative"
+          },
+          {
+            "feature": "Financial_Risk",
+            "impact": -0.21662750158735472,
+            "type": "negative"
+          },
+          {
+            "feature": "Scholarship holder",
+            "impact": 0.20945418918886263,
+            "type": "positive"
+          }
+        ]
+      }
+    ]
+  }
+]
