@@ -27,6 +27,7 @@ export const predictionService = {
     const result = await response.json();
     console.log('Received response from Python FastAPI:', result);
     return result;
+<<<<<<< HEAD
   },
 
   /**
@@ -51,5 +52,7 @@ export const predictionService = {
     const results = await response.json();
     console.log('Received batch response from Python FastAPI:', results);
     return results;
+=======
+>>>>>>> 4c1a31354928868246341aefb867bd375b5cf0f6
   }
 };
